@@ -283,7 +283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d11e5544fd74c264f8e9947e6241c29e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunkManager: {fileID: 0}
+  chunkManager: {fileID: 882608056}
   clearValue: -10
   rebuildAsync: 1
 --- !u!4 &882608058
