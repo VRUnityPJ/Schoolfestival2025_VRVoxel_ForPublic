@@ -237,7 +237,7 @@ public class SeamlessChunkManager : MonoBehaviour
             mc.voxelSize = voxelSize;
             mc.isoLevel = isoLevel;
             mc.centerMesh = false;
-            mc.addMeshCollider = false;
+            mc.addMeshCollider = true;
             
             // mc (BreakableMeshCreator) に渡すsamplerの基準座標も修正が必要
             Func<Vector3, float> sampler = (Vector3 posLocal) =>
