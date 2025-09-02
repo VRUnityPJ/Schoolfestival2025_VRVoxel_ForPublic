@@ -5,6 +5,7 @@ using System.IO;
 using VoxReader;
 using VoxReader.Interfaces;
 using UnityEngine;
+using R3;
 using Vector3 = UnityEngine.Vector3;
 /// <summary>
 /// ChunkManager（シーム生成対応版）
@@ -39,6 +40,7 @@ public class SeamlessChunkManager : MonoBehaviour
     public bool useMagicaVoxelModel = false;
     public string magicaVoxelFileName = "my_model.vox"; 
     public bool useMagicaVoxelModelMode;
+    public event Action OnVoxelRecreated;
 
     // ====== グローバル密度 ======
     float[,,] globalDensity;
@@ -205,59 +207,65 @@ public class SeamlessChunkManager : MonoBehaviour
     {
         chunks = new Chunk[chunksX, chunksY, chunksZ];
         for (int cx = 0; cx < chunksX; cx++)
-        for (int cy = 0; cy < chunksY; cy++)
-        for (int cz = 0; cz < chunksZ; cz++)
-        {
-            int startX = cx * chunkResolution;
-            int startY = cy * chunkResolution;
-            int startZ = cz * chunkResolution;
+            for (int cy = 0; cy < chunksY; cy++)
+                for (int cz = 0; cz < chunksZ; cz++)
+                {
+                    int startX = cx * chunkResolution;
+                    int startY = cy * chunkResolution;
+                    int startZ = cz * chunkResolution;
 
-            const int margin = 1;
-            // 取得範囲を前後にmargin分広げる
-            int extractStartX = startX - margin;
-            int extractStartY = startY - margin;
-            int extractStartZ = startZ - margin;
-            int extractSize = chunkResolution + 1 + (margin * 2);
+                    const int margin = 1;
+                    // 取得範囲を前後にmargin分広げる
+                    int extractStartX = startX - margin;
+                    int extractStartY = startY - margin;
+                    int extractStartZ = startZ - margin;
+                    int extractSize = chunkResolution + 1 + (margin * 2);
 
-            float[,,] local = ExtractDensitySlice(globalDensity, extractStartX, extractStartY, extractStartZ, extractSize);
-            Color32[,,] localColors = ExtractColorSlice(globalColors, extractStartX, extractStartY, extractStartZ, extractSize); // ← 色データを抽出
+                    float[,,] local = ExtractDensitySlice(globalDensity, extractStartX, extractStartY, extractStartZ, extractSize);
+                    Color32[,,] localColors = ExtractColorSlice(globalColors, extractStartX, extractStartY, extractStartZ, extractSize); // ← 色データを抽出
 
-            // float[,,] local = ExtractDensitySlice(globalDensity, startX, startY, startZ, chunkResolution + 1);
+                    // float[,,] local = ExtractDensitySlice(globalDensity, startX, startY, startZ, chunkResolution + 1);
 
                     GameObject go = new GameObject($"chunk_{cx}_{cy}_{cz}");
-            go.transform.parent = this.transform;
-            go.transform.localPosition = new Vector3(startX * voxelSize, startY * voxelSize, startZ * voxelSize);
-            go.transform.localRotation = Quaternion.identity;
+                    go.transform.parent = this.transform;
+                    go.transform.localPosition = new Vector3(startX * voxelSize, startY * voxelSize, startZ * voxelSize);
+                    go.transform.localRotation = Quaternion.identity;
 
-            var mf = go.AddComponent<MeshFilter>();
-            var mr = go.AddComponent<MeshRenderer>();
-            mr.sharedMaterial = chunkMaterial != null ? chunkMaterial : new Material(Shader.Find("Standard"));
+                    var mf = go.AddComponent<MeshFilter>();
+                    var mr = go.AddComponent<MeshRenderer>();
+                    mr.sharedMaterial = chunkMaterial != null ? chunkMaterial : new Material(Shader.Find("Standard"));
 
-            var mc = go.AddComponent<SeamlessMeshCreator>();
-            mc.voxelSize = voxelSize;
-            mc.isoLevel = isoLevel;
-            mc.centerMesh = false;
-            mc.addMeshCollider = true;
-            
-            // mc (BreakableMeshCreator) に渡すsamplerの基準座標も修正が必要
-            Func<Vector3, float> sampler = (Vector3 posLocal) =>
-            {
-                // posLocalは、extractしたスライスのローカル座標なので、
-                // グローバル座標に変換するには extractStart を足す
-                Vector3 gridGlobal = (posLocal / voxelSize) + new Vector3(extractStartX, extractStartY, extractStartZ);
-                return TrilinearSampleGlobal(globalDensity, gridGlobal);
-            };
+                    var mc = go.AddComponent<SeamlessMeshCreator>();
+                    mc.voxelSize = voxelSize;
+                    mc.isoLevel = isoLevel;
+                    mc.centerMesh = false;
+                    mc.addMeshCollider = true;
 
-            // mc.BuildMeshFromDensity(local, sampler);
-            mc.BuildMeshFromDensity(local, localColors, sampler); // ← 色データを渡す
+                    // mc (BreakableMeshCreator) に渡すsamplerの基準座標も修正が必要
+                    Func<Vector3, float> sampler = (Vector3 posLocal) =>
+                    {
+                        // posLocalは、extractしたスライスのローカル座標なので、
+                        // グローバル座標に変換するには extractStart を足す
+                        Vector3 gridGlobal = (posLocal / voxelSize) + new Vector3(extractStartX, extractStartY, extractStartZ);
+                        return TrilinearSampleGlobal(globalDensity, gridGlobal);
+                    };
 
-            chunks[cx, cy, cz] = new Chunk
-            {
-                ix = cx, iy = cy, iz = cz,
-                startX = startX, startY = startY, startZ = startZ,
-                go = go, mc = mc
-            };
-        }
+                    // mc.BuildMeshFromDensity(local, sampler);
+                    mc.BuildMeshFromDensity(local, localColors, sampler); // ← 色データを渡す
+
+                    chunks[cx, cy, cz] = new Chunk
+                    {
+                        ix = cx,
+                        iy = cy,
+                        iz = cz,
+                        startX = startX,
+                        startY = startY,
+                        startZ = startZ,
+                        go = go,
+                        mc = mc
+                    };
+                }
+        OnVoxelRecreated?.Invoke();
     }
 
     // -----------------------------
@@ -294,6 +302,8 @@ public class SeamlessChunkManager : MonoBehaviour
         };
         // c.mc.BuildMeshFromDensity(local, sampler);
         c.mc.BuildMeshFromDensity(local, localColors, sampler); // ← 色データを渡す
+
+        OnVoxelRecreated?.Invoke();
 
     }
 
@@ -485,4 +495,46 @@ public class SeamlessChunkManager : MonoBehaviour
     public int GetChunksX() => chunksX;
     public int GetChunksY() => chunksY;
     public int GetChunksZ() => chunksZ;
+    /// <summary>
+    /// 指定された範囲内のすべてのボクセルが「空」（密度がisoLevel未満）であるかを判定
+    /// </summary>
+    /// <param name="startPoint">チェックを開始するグローバルグリッド座標</param>
+    /// <param name="range">チェックする範囲（サイズ）</param>
+    /// <returns>すべて空ならtrue、一つでも詰まっていればfalseを返す</returns>
+    public bool IsAllEmpty(Vector3Int startPoint, Vector3Int range)
+    {
+        // 指定された範囲をループしてチェック
+        for (int x = 0; x < range.x; x++)
+        {
+            for (int y = 0; y < range.y; y++)
+            {
+                for (int z = 0; z < range.z; z++)
+                {
+                    // チェック対象のグローバル座標を計算
+                    int checkX = startPoint.x + x;
+                    int checkY = startPoint.y + y;
+                    int checkZ = startPoint.z + z;
+
+                    // --- 境界チェック ---
+                    // もしチェック対象が密度データの範囲外なら、そこは「空」として扱う
+                    if (checkX < 0 || checkX >= globalSizeX ||
+                        checkY < 0 || checkY >= globalSizeY ||
+                        checkZ < 0 || checkZ >= globalSizeZ)
+                    {
+                        continue; // 次のボクセルへ
+                    }
+
+                    // --- 密度チェック ---
+                    // 密度がisoLevel以上（＝固形物）のボクセルが一つでも見つかった場合
+                    if (globalDensity[checkX, checkY, checkZ] >= isoLevel)
+                    {
+                        return false; // その時点で「すべて空ではない」と確定。即座にfalseを返す
+                    }
+                }
+            }
+        }
+
+        // ループをすべて完走した場合、固形物は一つも見つからなかった
+        return true; // よって「すべて空である」と確定。trueを返す
+    }
 }
