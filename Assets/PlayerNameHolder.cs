@@ -1,6 +1,6 @@
 using Ranking.Scripts;
 using Ranking.Scripts.Interface;
-using UniRx;
+using R3;
 using UnityEngine;
 
 namespace KeyBoard

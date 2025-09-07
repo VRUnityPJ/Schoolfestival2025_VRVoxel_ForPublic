@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Ranking.Scripts;
 using Ranking.Scripts.DataBase;
-using Shinkan2025_Cooking.Scripts.Points;
+//using Shinkan2025_Cooking.Scripts.Points;
 using UnityEngine;
 
 namespace Shinkan2025_Cooking.Ranking.Scripts
@@ -43,7 +43,7 @@ namespace Shinkan2025_Cooking.Ranking.Scripts
             
             for (int i = 0; i < 5; i++)
             {
-                Debug.Log(data[i].GetData<Point>().IntValue);
+                //Debug.Log(data[i].GetData<Point>().IntValue);
             }
             //合計10秒のインターバル
             await UniTask.Delay(9000);
@@ -60,11 +60,11 @@ namespace Shinkan2025_Cooking.Ranking.Scripts
             }
             for (int i = 0; i < rankingDatas.Length; i++)
             {
-                if (data[i].GetData<Point>().IntValue != rankingDatas[i].GetData<Point>().IntValue)
-                {
-                    UpdateNowData(data);
-                    return false;
-                }
+                // if (data[i].GetData<Point>().IntValue != rankingDatas[i].GetData<Point>().IntValue)
+                // {
+                //     UpdateNowData(data);
+                //     return false;
+                // }
             }
             return true;
         }

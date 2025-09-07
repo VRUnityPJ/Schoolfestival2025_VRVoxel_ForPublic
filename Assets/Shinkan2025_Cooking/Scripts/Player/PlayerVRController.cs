@@ -1,19 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UniRx;
+using R3;
 using UnityEngine.XR;
-using UniRx.Triggers;
+using R3.Triggers;
 
 public class PlayerVRController : MonoBehaviour, IPlayerInputController
 {
     [SerializeField]
     private XRNode _xrNode;
-    private readonly BoolReactiveProperty _canStab;
+    private readonly ReactiveProperty<bool> _canStab;
     private Vector3 _velocity;
     private Vector3 _angularVelocity;
 
-    public IReadOnlyReactiveProperty<bool> CanStab => _canStab;
+    public ReadOnlyReactiveProperty<bool> CanStab => _canStab;
     public Vector3 Velocity => _velocity;
     public Vector3 AngularVelocity => _angularVelocity;
 

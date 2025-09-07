@@ -1,5 +1,5 @@
 using Ranking.Scripts;
-using UniRx;
+using R3;
 using UnityEngine;
 using UnityEngine.Serialization;
 

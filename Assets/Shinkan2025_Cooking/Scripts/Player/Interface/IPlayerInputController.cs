@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UniRx;
+using R3;
 
 public interface IPlayerInputController
 {
-    public IReadOnlyReactiveProperty<bool> CanStab { get; }
+    public ReadOnlyReactiveProperty<bool> CanStab { get; }
     public Vector3 Velocity { get; }
     public Vector3 AngularVelocity { get; }
 }

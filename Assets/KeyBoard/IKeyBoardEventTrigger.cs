@@ -1,11 +1,11 @@
-﻿using UniRx;
+﻿using R3;
 using UnityEngine.Events;
 
 namespace KeyBoard
 {
     public interface IKeyBoardEventTrigger
     {
-        public IReadOnlyReactiveProperty<string> TypedText { get; }
+        public ReadOnlyReactiveProperty<string> TypedText { get; }
         
         /// <summary>
         /// 保存している文字列が0文字の時に文字を消そうとしたときのイベント
