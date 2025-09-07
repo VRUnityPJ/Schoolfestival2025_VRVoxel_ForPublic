@@ -1,7 +1,7 @@
 using System;
 using Ranking.Scripts;
 using Ranking.Scripts.Interface;
-using UniRx;
+using R3;
 using UnityEngine;
 
 namespace Ranking.Demo.Scripts.DemoGame
@@ -11,7 +11,7 @@ namespace Ranking.Demo.Scripts.DemoGame
     {
         private RankingStorage _storage;
         private ReactiveProperty<PlayerName> _playerName = new ReactiveProperty<PlayerName>(new PlayerName("Player"));
-        public IReadOnlyReactiveProperty<PlayerName> PlayerName => _playerName;
+        public ReadOnlyReactiveProperty<PlayerName> PlayerName => _playerName;
         
         private void Start()
         {

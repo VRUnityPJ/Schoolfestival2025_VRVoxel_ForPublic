@@ -1,7 +1,7 @@
 using System;
 using Ranking.Scripts;
 using Ranking.Scripts.Interface;
-using UniRx;
+using R3;
 using UnityEngine;
 
 namespace Ranking.Demo.Scripts.DemoGame
@@ -9,7 +9,7 @@ namespace Ranking.Demo.Scripts.DemoGame
     public class PlayerScoreHolder : MonoBehaviour,IRankingDataHolder<Score>
     {
         private ReactiveProperty<Score> _score = new ReactiveProperty<Score>(new Score(0));
-        public IReadOnlyReactiveProperty<Score> Score => _score;
+        public ReadOnlyReactiveProperty<Score> Score => _score;
         private IRankingStorage _storage;
         private void Start()
         {

@@ -1,4 +1,4 @@
-﻿using UniRx;
+﻿using R3;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,7 +7,7 @@ namespace KeyBoard
     public class InputKeyCollector : MonoBehaviour,IKeyBoardEventTrigger
     {
         private ReactiveProperty<string> _TypedText = new ReactiveProperty<string>("");
-        public IReadOnlyReactiveProperty<string> TypedText => _TypedText;
+        public ReadOnlyReactiveProperty<string> TypedText => _TypedText;
         private int _maxTextSize;
         private KeyBoardSetting _setting;
         

@@ -1,7 +1,7 @@
 using DG.Tweening;
 using Ranking.Scripts;
 using Ranking.Scripts.DataBase;
-using Shinkan2025_Cooking.Scripts.Points;
+//using Shinkan2025_Cooking.Scripts.Points;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -71,12 +71,12 @@ namespace Shinkan2025_Cooking.Ranking.Scripts
             
             for (int i = 0; i < nameTexts.Length; i++)
             {
-                Point point = records[i].GetData<Point>();
+                //Point point = records[i].GetData<Point>();
                 PlayerName playerName = records[i].GetData<PlayerName>();
                 Debug.Log(playerName.StringValue);
                 nameTexts[i].text = playerName.StringValue;
                 Debug.Log("nameText = " + nameTexts[i].text);
-                scoreTexts[i].text = point.IntValue.ToString();
+                //scoreTexts[i].text = point.IntValue.ToString();
                 Debug.Log("ランキングボードを更新しました");
             }
         }

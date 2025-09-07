@@ -7,7 +7,7 @@ using PlayFab.ClientModels;
 using Ranking.Scripts;
 using Ranking.Scripts.DataBase;
 using UnityEngine;
-using Point = Shinkan2025_Cooking.Scripts.Points.Point;
+//using Point = Shinkan2025_Cooking.Scripts.Points.Point;
 
 
 //参考　https://kan-kikuchi.hatenablog.com/entry/PlayFabLogin
@@ -76,10 +76,10 @@ namespace Shinkan2025_Cooking.Ranking.Scripts
         public static void RegisterRankingData(RankingData data)
         {
             // var scoreData = data.GetData<Score>();
-            var pointData = data.GetData<Point>();
+            //var pointData = data.GetData<Point>();
             var nameData = data.GetData<PlayerName>();
             // RegisterScore(scoreData);
-            RegisterPoint(pointData);
+            //RegisterPoint(pointData);
             RegisterPlayerName(nameData);
         }
 
@@ -121,35 +121,35 @@ namespace Shinkan2025_Cooking.Ranking.Scripts
         /// ポイントを登録する関数
         /// </summary>
         /// <param name="score"></param>
-        private static void RegisterPoint(Point score)
-        {
-            int data = score.IntValue;
+        // private static void RegisterPoint(Point score)
+        // {
+        //     int data = score.IntValue;
         
-            PlayFabClientAPI.UpdatePlayerStatistics
-            (
-                new UpdatePlayerStatisticsRequest
-                {
-                    Statistics = new List<StatisticUpdate>()
-                    {
-                        new StatisticUpdate
-                        {
-                            StatisticName = RANKING_NAME,
-                            Value = data
-                        }
-                    }
-                },
-                result =>
-                {
-                    onCompleteRegister?.Invoke();
-                    Debug.Log($"{data}:スコア送信");
-                },
-                error =>
-                {
-                    onFailedRegister?.Invoke();
-                    Debug.Log($"{data}:スコア送信に失敗\n{error.GenerateErrorReport()}");
-                }
-            );
-        }
+        //     PlayFabClientAPI.UpdatePlayerStatistics
+        //     (
+        //         new UpdatePlayerStatisticsRequest
+        //         {
+        //             Statistics = new List<StatisticUpdate>()
+        //             {
+        //                 new StatisticUpdate
+        //                 {
+        //                     StatisticName = RANKING_NAME,
+        //                     Value = data
+        //                 }
+        //             }
+        //         },
+        //         result =>
+        //         {
+        //             onCompleteRegister?.Invoke();
+        //             Debug.Log($"{data}:スコア送信");
+        //         },
+        //         error =>
+        //         {
+        //             onFailedRegister?.Invoke();
+        //             Debug.Log($"{data}:スコア送信に失敗\n{error.GenerateErrorReport()}");
+        //         }
+        //     );
+        // }
         /// <summary>
         /// プレイヤー名の登録
         /// </summary>
@@ -252,11 +252,11 @@ namespace Shinkan2025_Cooking.Ranking.Scripts
                             Debug.LogError("取得したランキングが欠落しています");
                         
                         // Score score = new Score(i_score);
-                        Point point = new Point(i_score);
+                        //Point point = new Point(i_score);
                         PlayerName playerName = new PlayerName(i_name);
                         
                         //データを更新
-                        dataForDataBase.UpdateData(point);
+                        //dataForDataBase.UpdateData(point);
                         dataForDataBase.UpdateData(playerName);
                         
                         //配列に格納
