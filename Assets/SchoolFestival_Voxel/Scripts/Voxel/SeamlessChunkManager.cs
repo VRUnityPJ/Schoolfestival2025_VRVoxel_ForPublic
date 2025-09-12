@@ -383,23 +383,6 @@ public class SeamlessChunkManager : MonoBehaviour
 
         return Mathf.Lerp(c0, c1, fz);
     }
-
-    // -----------------------------
-    // シーム頂点：Surface Nets の“セル頂点”をグローバル座標系で算出
-    // base cell (gx,gy,gz) に対して、8隅と12エッジで交差平均を取り、ワールド座標を返す
-    // 面が存在しなければ false
-    // -----------------------------
-    static readonly Vector3Int[] cOff = new Vector3Int[8]
-    {
-        new Vector3Int(0,0,0), new Vector3Int(1,0,0), new Vector3Int(1,1,0), new Vector3Int(0,1,0),
-        new Vector3Int(0,0,1), new Vector3Int(1,0,1), new Vector3Int(1,1,1), new Vector3Int(0,1,1),
-    };
-    static readonly int[,] eIdx = new int[12,2]
-    {
-        {0,1},{1,2},{2,3},{3,0},
-        {4,5},{5,6},{6,7},{7,4},
-        {0,4},{1,5},{2,6},{3,7}
-    };
     // ↓↓ このヘルパーメソッドを ChunkManager.cs のクラスの末尾などに追加してください ↓↓
     
     /// <summary>
@@ -446,45 +429,18 @@ public class SeamlessChunkManager : MonoBehaviour
         Color32[,,] outd = new Color32[len, len, len];
         int sx = src.GetLength(0), sy = src.GetLength(1), sz = src.GetLength(2);
         for (int x = 0; x < len; x++)
-        for (int y = 0; y < len; y++)
-        for (int z = 0; z < len; z++)
-        {
-            int gx = startX + x;
-            int gy = startY + y;
-            int gz = startZ + z;
-            if (gx >= 0 && gx < sx && gy >= 0 && gy < sy && gz >= 0 && gz < sz)
-                outd[x, y, z] = src[gx, gy, gz];
-            else
-                outd[x, y, z] = new Color32(0, 0, 0, 255);
-        }
+            for (int y = 0; y < len; y++)
+                for (int z = 0; z < len; z++)
+                {
+                    int gx = startX + x;
+                    int gy = startY + y;
+                    int gz = startZ + z;
+                    if (gx >= 0 && gx < sx && gy >= 0 && gy < sy && gz >= 0 && gz < sz)
+                        outd[x, y, z] = src[gx, gy, gz];
+                    else
+                        outd[x, y, z] = new Color32(0, 0, 0, 255);
+                }
         return outd;
-    }
-
-    
-    // -----------------------------
-    // 低頻度ユーティリティ（法線/向き補正）
-    // -----------------------------
-    UnityEngine.Vector3[] ComputeVertexNormals(UnityEngine.Vector3[] verts, int[] tris)
-    {
-        UnityEngine.Vector3[] normals = new UnityEngine.Vector3[verts.Length];
-        for (int i = 0; i < normals.Length; i++) normals[i] = Vector3.zero;
-
-        for (int t = 0; t + 2 < tris.Length; t += 3)
-        {
-            int i0 = tris[t], i1 = tris[t + 1], i2 = tris[t + 2];
-            if (i0 < 0 || i1 < 0 || i2 < 0) continue;
-            if (i0 >= verts.Length || i1 >= verts.Length || i2 >= verts.Length) continue;
-
-            Vector3 v0 = verts[i0], v1 = verts[i1], v2 = verts[i2];
-            Vector3 fn = Vector3.Cross(v1 - v0, v2 - v0);
-            if (fn.sqrMagnitude < 1e-12f) continue;
-            fn.Normalize();
-            normals[i0] += fn; normals[i1] += fn; normals[i2] += fn;
-        }
-        for (int i = 0; i < normals.Length; i++)
-            normals[i] = normals[i].sqrMagnitude > 1e-12f ? normals[i].normalized : Vector3.up;
-
-        return normals;
     }
 
 
