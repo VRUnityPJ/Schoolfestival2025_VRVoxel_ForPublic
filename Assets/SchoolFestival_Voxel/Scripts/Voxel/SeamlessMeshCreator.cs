@@ -104,18 +104,8 @@ public class SeamlessMeshCreator : MonoBehaviour
                         if (v > max) max = v;
                     }
 
-                    // if (min > 0f || max < 0f) continue; // 交差なし
 
                     Color avgColor = startColor;
-                    
-                    // for (int c = 0; c < 8; c++)
-                    // {
-                    //     int ix = x + cornerOffset[c].x;
-                    //     int iy = y + cornerOffset[c].y;
-                    //     int iz = z + cornerOffset[c].z;
-                    //     avgColor += colors[ix, iy, iz]; // Color32はColorに暗黙変換される
-                    // }
-                    // avgColor /= 8f;
                     
                     int colorSampleCount = 0; // 色を採取した回数をカウント
                     for (int c = 0; c < 8; c++)
@@ -138,18 +128,6 @@ public class SeamlessMeshCreator : MonoBehaviour
                     }
                     else
                     {
-                        /*
-                        Debug.Log("万が一起きとるやんけ");
-                        // 万が一、内側の色が一つも取得できなかった場合 (基本的には起こり得ない)
-                        // フォールバックとして以前のロジックを使うか、デフォルト色を指定
-                        for (int c = 0; c < 8; c++)
-                        {
-                            int ix = x + cornerOffset[c].x;
-                            int iy = y + cornerOffset[c].y;
-                            int iz = z + cornerOffset[c].z;
-                            avgColor += colors[ix, iy, iz];
-                        }
-                        avgColor /= 8f;*/
                         avgColor = errColor;
                     }
 
@@ -185,97 +163,6 @@ public class SeamlessMeshCreator : MonoBehaviour
                 }
             }
         }
-        
-        // 2) 隣接セルをつないで quad -> triangles
-        // List<int> triangles = new List<int>();
-        // void AddQuadInt(int a, int b, int c, int d)
-        // {
-        //     triangles.Add(a); triangles.Add(b); triangles.Add(c);
-        //     triangles.Add(a); triangles.Add(c); triangles.Add(d);
-        // }
-
-        // // cval配列を再利用するために、ここで再計算します
-        // float[,,] cellValues = new float[sizeX, sizeY, sizeZ];
-        // for(int x=0; x<sizeX; x++)
-        // for(int y=0; y<sizeY; y++)
-        // for(int z=0; z<sizeZ; z++)
-        // {
-        //     cellValues[x,y,z] = density[x,y,z] - iso;
-        // }
-
-        // for (int x = 0; x < cx; x++)
-        // {
-        //     for (int y = 0; y < cy; y++)
-        //     {
-        //         for (int z = 0; z < cz; z++)
-        //         {
-        //             int v = cellIndex[x, y, z];
-        //             if (v < 0) continue;
-
-        //             // Z軸に垂直な面 (XY平面)
-        //             if (x + 1 < cx && y + 1 < cy)
-        //             {
-        //                 int v_xp1 = cellIndex[x + 1, y, z];
-        //                 int v_yp1 = cellIndex[x, y + 1, z];
-        //                 int v_xp1yp1 = cellIndex[x + 1, y + 1, z];
-        //                 if (v_xp1 >= 0 && v_yp1 >= 0 && v_xp1yp1 >= 0)
-        //                 {
-        //                     // 面を共有する4点の密度値を取得
-        //                     float d00 = cellValues[x, y, z];
-        //                     float d10 = cellValues[x + 1, y, z];
-        //                     float d01 = cellValues[x, y + 1, z];
-        //                     float d11 = cellValues[x + 1, y + 1, z];
-
-        //                     // 4点の符号が全て同じでなければ、面を表面が横切っている
-        //                     if ((d00 > 0) != (d10 > 0) || (d00 > 0) != (d01 > 0) || (d00 > 0) != (d11 > 0))
-        //                     {
-        //                         AddQuadInt(v, v_xp1, v_xp1yp1, v_yp1);
-        //                     }
-        //                 }
-        //             }
-
-        //             // X軸に垂直な面 (YZ平面)
-        //             if (y + 1 < cy && z + 1 < cz)
-        //             {
-        //                 int v_yp1 = cellIndex[x, y + 1, z];
-        //                 int v_zp1 = cellIndex[x, y, z + 1];
-        //                 int v_yp1zp1 = cellIndex[x, y + 1, z + 1];
-        //                 if (v_yp1 >= 0 && v_zp1 >= 0 && v_yp1zp1 >= 0)
-        //                 {
-        //                     float d00 = cellValues[x, y, z];
-        //                     float d01 = cellValues[x, y + 1, z];
-        //                     float d10 = cellValues[x, y, z + 1];
-        //                     float d11 = cellValues[x, y + 1, z + 1];
-
-        //                     if ((d00 > 0) != (d10 > 0) || (d00 > 0) != (d01 > 0) || (d00 > 0) != (d11 > 0))
-        //                     {
-        //                         AddQuadInt(v, v_yp1, v_yp1zp1, v_zp1);
-        //                     }
-        //                 }
-        //             }
-
-        //             // Y軸に垂直な面 (XZ平面)
-        //             if (z + 1 < cz && x + 1 < cx)
-        //             {
-        //                 int v_zp1 = cellIndex[x, y, z + 1];
-        //                 int v_xp1 = cellIndex[x + 1, y, z];
-        //                 int v_xp1zp1 = cellIndex[x + 1, y, z + 1];
-        //                 if (v_zp1 >= 0 && v_xp1 >= 0 && v_xp1zp1 >= 0)
-        //                 {
-        //                     float d00 = cellValues[x, y, z];
-        //                     float d10 = cellValues[x, y, z + 1];
-        //                     float d01 = cellValues[x + 1, y, z];
-        //                     float d11 = cellValues[x + 1, y, z + 1];
-
-        //                     if ((d00 > 0) != (d10 > 0) || (d00 > 0) != (d01 > 0) || (d00 > 0) != (d11 > 0))
-        //                     {
-        //                         AddQuadInt(v, v_zp1, v_xp1zp1, v_xp1);
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
         
         // 2) 隣接セルをつないで quad -> triangles
         List<int> triangles = new List<int>();
