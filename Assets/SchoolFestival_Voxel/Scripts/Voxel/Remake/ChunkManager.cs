@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using SchoolFestival_Voxel.Scripts.Voxel.Remake;
 using VoxReader;
 using VoxReader.Interfaces;
 using UnityEngine;
+using ZLinq;
 using Vector3 = UnityEngine.Vector3;
 
 public readonly struct VoxelData
@@ -25,6 +25,7 @@ public class ColorMaterialPair
     public Color32 color;
     public Material material;
 }
+
 public class ChunkManager : MonoBehaviour
 {
     [Header("Chunk / Grid")]
@@ -68,17 +69,23 @@ public class ChunkManager : MonoBehaviour
             Debug.LogError($"MagicaVoxelファイルが見つかりません: {filePath}");
             return;
         }
+        
         IVoxFile voxFileContent = VoxReader.VoxReader.Read(filePath);
+        
         if (voxFileContent == null || voxFileContent.Models.Length == 0)
         {
             Debug.LogError("MagicaVoxelファイルの読み込みに失敗したか、モデルが含まれていません。");
             return;
         }
+        
         IModel model = voxFileContent.Models[0];
         
         // --- ここからマテリアルのマッピング処理 ---
         
-        var colorToMaterialLookup = _colorMaterialPairs.ToDictionary(p => p.color, p => p.material);
+        var colorToMaterialLookup = _colorMaterialPairs
+            .AsValueEnumerable()
+            .ToDictionary(p => p.color, p => p.material);
+        
         var paletteIndexToMaterial = new Dictionary<int, Material>();
 
         // ★ 修正点 1 & 2: Palette.Colors を使用してループとインデックスアクセスを行う
@@ -99,14 +106,19 @@ public class ChunkManager : MonoBehaviour
         {
             Debug.LogWarning("モデルの色に対応するマテリアルが一つも見つかりませんでした。Inspectorの[Color Material Pairs]の設定、または[Color Match Threshold]の値を確認してください。");
             // 処理を中断しないために、空のリストで続行する
-            _activeMaterials = new Material[0];
+            _activeMaterials = Array.Empty<Material>();
             _paletteIndexToSubMeshIndexMap = new Dictionary<int, int>();
         }
 
-        var distinctMaterials = paletteIndexToMaterial.Values.Distinct().ToList();
-        _activeMaterials = distinctMaterials.ToArray();
+        var distinctMaterials = paletteIndexToMaterial.Values
+            .AsValueEnumerable()
+            .Distinct()
+            .ToArray();
+        
+        _activeMaterials = distinctMaterials;
 
         var materialToSubmeshIndex = distinctMaterials
+            .AsValueEnumerable()
             .Select((m, i) => new { Material = m, Index = i })
             .ToDictionary(x => x.Material, x => x.Index);
 
@@ -140,17 +152,27 @@ public class ChunkManager : MonoBehaviour
                 _globalVoxelData[x, y, z] = new VoxelData(1,0);
             }
         }
+        
         Debug.Log($"MagicaVoxelモデルを読み込みました。サイズ: ({_globalSizeX}, {_globalSizeY}, {_globalSizeZ})");
     }
 
-    // public Material GetMaterial(Vector3Int globalPos, float isoLevel, VoxelData[,,] globalVoxelData)
-    // {
-    //      
-    // }
+    /// <summary>
+    /// マテリアルを取得する
+    /// </summary>
+    /// <param name="globalPos"></param>
+    /// <param name="isoLevel"></param>
+    /// <param name="globalVoxelData"></param>
+    /// <returns></returns>
+    public Material GetMaterial(Vector3Int globalPos, float isoLevel, VoxelData[,,] globalVoxelData)
+    {
+        var id = ChunkUtility.GetCellMaterialID(globalPos, isoLevel, globalVoxelData);
+        return _activeMaterials[id];
+    }
 
     private void CreateChunks()
     {
         if (_globalVoxelData == null) return;
+        
         int chunksX = Mathf.CeilToInt((float)_globalSizeX / chunkResolution);
         int chunksY = Mathf.CeilToInt((float)_globalSizeY / chunkResolution);
         int chunksZ = Mathf.CeilToInt((float)_globalSizeZ / chunkResolution);
@@ -170,7 +192,6 @@ public class ChunkManager : MonoBehaviour
                     
                     ChunkRenderer chunkRenderer = chunkObject.AddComponent<ChunkRenderer>();
                     
-                    // chunkRenderer.GenerateMarchingCubesMesh(globalVoxelData, chunkStartPos, chunkResolution, voxelSize, _activeMaterials);
                     chunkRenderer.GenerateSurfaceNetsMesh(_globalVoxelData, chunkStartPos, chunkResolution, voxelSize, _activeMaterials);
                     _chunkDic.Add(chunkCoord, chunkRenderer);
                 }
@@ -196,7 +217,7 @@ public class ChunkManager : MonoBehaviour
             point.y < 0 || point.y >= _globalSizeY ||
             point.z < 0 || point.z >= _globalSizeZ)
         {
-            return false; // 
+            return false; 
         }
         if (_globalVoxelData[point.x, point.y, point.z].density > 0)
         {
@@ -218,6 +239,7 @@ public class ChunkManager : MonoBehaviour
             }
         }
     }
+    
     public bool IsAllEmpty(Vector3Int startPoint, Vector3Int range)
     {
         // 指定された範囲をループしてチェック

@@ -12,8 +12,12 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
     /// </summary>
     public class RemakeMeshDestroyer : MonoBehaviour
     {
-        [SerializeField]private ChunkManager _chunkManager;
-        private readonly float _clearValue = -1.0f; // 空洞化時にセットする密度値（iso より十分小さく）
+        [SerializeField] private ChunkManager _chunkManager;
+        
+        /// <summary>
+        /// 空洞化時にセットする密度値（iso より十分小さく）
+        /// </summary>
+        private const float ClearValue = -1.0f; 
 
         private void Awake()
         {
@@ -56,7 +60,7 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
                 {
                     // clear density
                     var materialId = global[x, y, z].materialID;
-                    global[x, y, z] = new VoxelData(_clearValue, materialId);
+                    global[x, y, z] = new VoxelData(ClearValue, materialId);
                     
                     // mark chunk
                     int cx = x / _chunkManager.GetChunkResolution();
