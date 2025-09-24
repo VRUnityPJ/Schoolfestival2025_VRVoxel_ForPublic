@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using ZLinq;
 
 namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
 {
@@ -180,13 +181,14 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
         public int GetCellMaterialID(Vector3Int globalPos, float isoLevel, VoxelData[,,] globalVoxelData)
         {
              return Enumerable.Range(0, 8)
-                .Select(i => GetVoxelData(globalPos.x + _cornerOffsets[i].x, globalPos.y + _cornerOffsets[i].y, globalPos.z + _cornerOffsets[i].z, globalVoxelData))
-                .Where(d => d.density >= isoLevel && d.materialID != -1)
-                .GroupBy(d => d.materialID)
-                .OrderByDescending(g => g.Count())
-                .Select(g => g.Key)
-                .DefaultIfEmpty(-1)
-                .First();
+                 .AsValueEnumerable()
+                 .Select(i => GetVoxelData(globalPos.x + _cornerOffsets[i].x, globalPos.y + _cornerOffsets[i].y, globalPos.z + _cornerOffsets[i].z, globalVoxelData))
+                 .Where(d => d.density >= isoLevel && d.materialID != -1)
+                 .GroupBy(d => d.materialID)
+                 .OrderByDescending(g => g.Count())
+                 .Select(g => g.Key)
+                 .DefaultIfEmpty(-1)
+                 .First();
         }
 
     
@@ -201,9 +203,12 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
 
         private void BuildMesh()
         {
+            TryGetComponent<MeshFilter>(out var meshFilter);
+            TryGetComponent<MeshRenderer>(out var meshRenderer);
+            
             if (_vertices.Count == 0)
             {
-                GetComponent<MeshFilter>().mesh = null;
+                meshFilter.mesh = null;
                 return;
             }
 
@@ -235,8 +240,8 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
 
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            GetComponent<MeshFilter>().mesh = mesh;
-            GetComponent<MeshRenderer>().materials = activeMaterials;
+            meshFilter.mesh = mesh;
+            meshRenderer.materials = activeMaterials;
         }
 
         private readonly Vector3Int[] _cornerOffsets = {
