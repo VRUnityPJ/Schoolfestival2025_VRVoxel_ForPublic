@@ -177,7 +177,7 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
         /// <summary>
         /// 指定されたグローバル座標のセルのマテリアルIDを取得します。
         /// </summary>
-        private int GetCellMaterialID(Vector3Int globalPos, float isoLevel, VoxelData[,,] globalVoxelData)
+        public int GetCellMaterialID(Vector3Int globalPos, float isoLevel, VoxelData[,,] globalVoxelData)
         {
              return Enumerable.Range(0, 8)
                 .Select(i => GetVoxelData(globalPos.x + _cornerOffsets[i].x, globalPos.y + _cornerOffsets[i].y, globalPos.z + _cornerOffsets[i].z, globalVoxelData))
@@ -190,11 +190,11 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
         }
 
     
-        private VoxelData GetVoxelData(int x, int y, int z, VoxelData[,,] data)
+        public VoxelData GetVoxelData(int x, int y, int z, VoxelData[,,] data)
         {
             if (x < 0 || x >= data.GetLength(0) || y < 0 || y >= data.GetLength(1) || z < 0 || z >= data.GetLength(2))
             {
-                return new VoxelData { density = 0, materialID = -1 };
+                return new VoxelData(0,-1);
             }
             return data[x, y, z];
         }
