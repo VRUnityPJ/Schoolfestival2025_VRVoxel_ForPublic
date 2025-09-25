@@ -1,14 +1,13 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
 {
     public class ClickToDestroy : MonoBehaviour
     {
-        [SerializeField]private RemakeMeshDestroyer _meshDestroyer;
-        [SerializeField]private float _destroyRadius = 3f; // 破壊する球の半径
+        [SerializeField] private RemakeMeshDestroyer _meshDestroyer;
+        [SerializeField] private float _destroyRadius = 3f; // 破壊する球の半径
 
-        void Update()
+        private　void Update()
         {
             if (Input.GetMouseButtonDown(0)) // マウスの左クリック
             {
