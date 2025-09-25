@@ -12,10 +12,14 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
     /// </summary>
     public class RemakeMeshDestroyer : MonoBehaviour
     {
-        [SerializeField]private ChunkManager _chunkManager;
-        private readonly float _clearValue = -1.0f; // 空洞化時にセットする密度値（iso より十分小さく）
+        [SerializeField] private ChunkManager _chunkManager;
+        
+        /// <summary>
+        /// 空洞化時にセットする密度値（iso より十分小さく）
+        /// </summary>
+        private const float ClearValue = -1.0f; 
 
-        void Awake()
+        private void Awake()
         {
             if (_chunkManager == null) _chunkManager = GetComponent<ChunkManager>();
             if (_chunkManager == null) Debug.LogWarning("MeshDestroyer: chunkManager not assigned.");
@@ -27,7 +31,7 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
         /// </summary>
         public void DestroySphere(Vector3 worldPos, float radius)
         {
-            if (_chunkManager == null) return;
+            if (!_chunkManager) return;
 
             float voxelSize = _chunkManager.voxelSize;
             float rGrid = radius / voxelSize;
@@ -55,7 +59,9 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
                 if (dx*dx + dy*dy + dz*dz <= rGrid * rGrid)
                 {
                     // clear density
-                    global[x, y, z].density = _clearValue;
+                    var materialId = global[x, y, z].materialID;
+                    global[x, y, z] = new VoxelData(ClearValue, materialId);
+                    
                     // mark chunk
                     int cx = x / _chunkManager.GetChunkResolution();
                     int cy = y / _chunkManager.GetChunkResolution();
