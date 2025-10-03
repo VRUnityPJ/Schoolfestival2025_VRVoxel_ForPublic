@@ -47,12 +47,13 @@ namespace SchoolFestival_Voxel.Scripts.Player
             */
             _mainInput.Player.Turn.started += context => _onTurn.OnNext(context.ReadValue<Vector2>());
         }
-        
+
         // RigidBodyなどの物理演算に関わるものはUpdateではなくFixedUpdateで処理する
         private void FixedUpdate()
         {
             // 移動入力を毎フレーム送信
             _onMove.OnNext(_mainInput.Player.Move.ReadValue<Vector2>());
+            Debug.Log("Move"+ _mainInput.Player.Move.ReadValue<Vector2>() );
         }
     }
 }
