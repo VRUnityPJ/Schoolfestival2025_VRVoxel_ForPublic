@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using ZLinq;
 
 namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
 {
@@ -42,8 +42,8 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
                         var cornerDensities = new float[8];
                         for(int i = 0; i < 8; i++)
                         {
-                            var cornerPos = globalPos + _cornerOffsets[i];
-                            cornerDensities[i] = GetVoxelData(cornerPos.x, cornerPos.y, cornerPos.z, globalVoxelData).density;
+                            var cornerPos = globalPos + ChunkUtility.CornerOffsets[i];
+                            cornerDensities[i] = ChunkUtility.GetVoxelData(cornerPos.x, cornerPos.y, cornerPos.z, globalVoxelData).density;
                             if (cornerDensities[i] >= isoLevel)
                             {
                                 cubeIndex |= (1 << i);
@@ -54,7 +54,7 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
                         if (Tables.edgeTable[cubeIndex] == 0) continue;
 
                         // このセルのマテリアルIDを決定（最も多いものを採用）
-                         int materialID = GetCellMaterialID(globalPos, isoLevel, globalVoxelData);
+                         int materialID = ChunkUtility.GetCellMaterialID(globalPos, isoLevel, globalVoxelData);
                          if (materialID == -1) continue;
 
 
@@ -64,8 +64,8 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
                         {
                             if ((Tables.edgeTable[cubeIndex] & (1 << i)) != 0)
                             {
-                                Vector3 p1 = globalPos + _cornerOffsets[_edgeConnections[i, 0]];
-                                Vector3 p2 = globalPos + _cornerOffsets[_edgeConnections[i, 1]];
+                                Vector3 p1 = globalPos + ChunkUtility.CornerOffsets[ChunkUtility.EdgeConnections[i, 0]];
+                                Vector3 p2 = globalPos + ChunkUtility.CornerOffsets[ChunkUtility.EdgeConnections[i, 0]];
                                 // 線形補間を使ってより正確な交点を見つけることも可能
                                 Vector3 intersection = (p1 + p2) / 2.0f;
                                 crossingPoints.Add(intersection);
@@ -100,12 +100,12 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
                         var globalP = chunkStartPos + p;
 
                         // 基準となるボクセルが固体かどうかを判定
-                        bool pIsSolid = GetVoxelData(globalP.x, globalP.y, globalP.z, globalVoxelData).density >= isoLevel;
+                        bool pIsSolid = ChunkUtility.GetVoxelData(globalP.x, globalP.y, globalP.z, globalVoxelData).density >= isoLevel;
 
                         // Z軸に沿った面
-                        if (pIsSolid != (GetVoxelData(globalP.x, globalP.y, globalP.z + 1, globalVoxelData).density >= isoLevel))
+                        if (pIsSolid != (ChunkUtility.GetVoxelData(globalP.x, globalP.y, globalP.z + 1, globalVoxelData).density >= isoLevel))
                         {
-                            int mat = pIsSolid ? GetCellMaterialID(globalP, isoLevel, globalVoxelData) : GetCellMaterialID(globalP + Vector3Int.forward, isoLevel, globalVoxelData);
+                            int mat = pIsSolid ? ChunkUtility.GetCellMaterialID(globalP, isoLevel, globalVoxelData) : ChunkUtility.GetCellMaterialID(globalP + Vector3Int.forward, isoLevel, globalVoxelData);
                             TryCreateQuad_R(mat, pIsSolid,
                                 new Vector3Int(x, y, z), new Vector3Int(x - 1, y, z),
                                 new Vector3Int(x, y - 1, z), new Vector3Int(x - 1, y - 1, z),
@@ -113,9 +113,9 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
                         }
 
                         // Y軸に沿った面
-                        if (pIsSolid != (GetVoxelData(globalP.x, globalP.y + 1, globalP.z, globalVoxelData).density >= isoLevel))
+                        if (pIsSolid != (ChunkUtility.GetVoxelData(globalP.x, globalP.y + 1, globalP.z, globalVoxelData).density >= isoLevel))
                         {
-                            int mat = pIsSolid ? GetCellMaterialID(globalP, isoLevel, globalVoxelData) : GetCellMaterialID(globalP + Vector3Int.up, isoLevel, globalVoxelData);
+                            int mat = pIsSolid ? ChunkUtility.GetCellMaterialID(globalP, isoLevel, globalVoxelData) : ChunkUtility.GetCellMaterialID(globalP + Vector3Int.up, isoLevel, globalVoxelData);
                             TryCreateQuad_R(mat, pIsSolid,
                                 new Vector3Int(x, y, z), new Vector3Int(x, y, z - 1),
                                 new Vector3Int(x - 1, y, z), new Vector3Int(x - 1, y, z - 1),
@@ -123,9 +123,9 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
                         }
 
                         // X軸に沿った面
-                        if (pIsSolid != (GetVoxelData(globalP.x + 1, globalP.y, globalP.z, globalVoxelData).density >= isoLevel))
+                        if (pIsSolid != (ChunkUtility.GetVoxelData(globalP.x + 1, globalP.y, globalP.z, globalVoxelData).density >= isoLevel))
                         {
-                            int mat = pIsSolid ? GetCellMaterialID(globalP, isoLevel, globalVoxelData) : GetCellMaterialID(globalP + Vector3Int.right, isoLevel, globalVoxelData);
+                            int mat = pIsSolid ? ChunkUtility.GetCellMaterialID(globalP, isoLevel, globalVoxelData) : ChunkUtility.GetCellMaterialID(globalP + Vector3Int.right, isoLevel, globalVoxelData);
                             TryCreateQuad_R(mat, pIsSolid,
                                 new Vector3Int(x, y, z), new Vector3Int(x, y - 1, z),
                                 new Vector3Int(x, y, z - 1), new Vector3Int(x, y - 1, z - 1),
@@ -173,37 +173,15 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
                 }
             }
         }
-        
-        /// <summary>
-        /// 指定されたグローバル座標のセルのマテリアルIDを取得します。
-        /// </summary>
-        private int GetCellMaterialID(Vector3Int globalPos, float isoLevel, VoxelData[,,] globalVoxelData)
-        {
-             return Enumerable.Range(0, 8)
-                .Select(i => GetVoxelData(globalPos.x + _cornerOffsets[i].x, globalPos.y + _cornerOffsets[i].y, globalPos.z + _cornerOffsets[i].z, globalVoxelData))
-                .Where(d => d.density >= isoLevel && d.materialID != -1)
-                .GroupBy(d => d.materialID)
-                .OrderByDescending(g => g.Count())
-                .Select(g => g.Key)
-                .DefaultIfEmpty(-1)
-                .First();
-        }
-
-    
-        private VoxelData GetVoxelData(int x, int y, int z, VoxelData[,,] data)
-        {
-            if (x < 0 || x >= data.GetLength(0) || y < 0 || y >= data.GetLength(1) || z < 0 || z >= data.GetLength(2))
-            {
-                return new VoxelData { density = 0, materialID = -1 };
-            }
-            return data[x, y, z];
-        }
-
+  
         private void BuildMesh()
         {
+            TryGetComponent<MeshFilter>(out var meshFilter);
+            TryGetComponent<MeshRenderer>(out var meshRenderer);
+            
             if (_vertices.Count == 0)
             {
-                GetComponent<MeshFilter>().mesh = null;
+                meshFilter.mesh = null;
                 return;
             }
 
@@ -211,11 +189,15 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
             mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
             mesh.vertices = _vertices.ToArray();
 
-            var sortedSubmeshes = _submeshTriangles.OrderBy(pair => pair.Key).ToList();
-            mesh.subMeshCount = sortedSubmeshes.Count;
-            var activeMaterials = new Material[sortedSubmeshes.Count];
+            var sortedSubmeshes = _submeshTriangles
+                .AsValueEnumerable()
+                .OrderBy(pair => pair.Key)
+                .ToArray();
+            
+            mesh.subMeshCount = sortedSubmeshes.Length;
+            var activeMaterials = new Material[sortedSubmeshes.Length];
 
-            for (int i = 0; i < sortedSubmeshes.Count; i++)
+            for (int i = 0; i < sortedSubmeshes.Length; i++)
             {
                 var pair = sortedSubmeshes[i];
                 int submeshIndex = pair.Key;
@@ -235,18 +217,9 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
 
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            GetComponent<MeshFilter>().mesh = mesh;
-            GetComponent<MeshRenderer>().materials = activeMaterials;
+            meshFilter.mesh = mesh;
+            meshRenderer.materials = activeMaterials;
         }
-
-        private readonly Vector3Int[] _cornerOffsets = {
-            new Vector3Int(0, 0, 0), new Vector3Int(1, 0, 0), new Vector3Int(1, 0, 1), new Vector3Int(0, 0, 1),
-            new Vector3Int(0, 1, 0), new Vector3Int(1, 1, 0), new Vector3Int(1, 1, 1), new Vector3Int(0, 1, 1)
-        };
-        private readonly int[,] _edgeConnections = {
-            {0, 1}, {1, 2}, {2, 3}, {3, 0}, {4, 5}, {5, 6}, {6, 7}, {7, 4},
-            {0, 4}, {1, 5}, {2, 6}, {3, 7}
-        };
     }
 }
 
