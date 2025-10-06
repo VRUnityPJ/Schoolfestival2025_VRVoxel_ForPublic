@@ -1,6 +1,7 @@
 using Ranking.Scripts;
 using Ranking.Scripts.Interface;
 //using UniRx;
+using R3;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,18 +17,18 @@ namespace Shinkan2024.Scripts.Game.Point
         /// このHolderを使用するScene
         /// </summary>
         private RankingStorage _storage;
-        //private ReactiveProperty<Point> _point = new ReactiveProperty<Point>();
-        //public IReadOnlyReactiveProperty<Point> Point => _point;
+        private ReactiveProperty<Point> _point = new ReactiveProperty<Point>();
+        public ReadOnlyReactiveProperty<Point> Point => _point;
         public static PointHolder Instance;
 
         void Start()
         {
-            //SetStorage().
-            //_point.Value = new Point(0);
+            SetStorage();
+            _point.Value = new Point(0);
 
-            //_point
-               // .Subscribe(value => SendData(value))
-                //.AddTo(this);
+            _point
+                .Subscribe(value => SendData(value))
+                .AddTo(this);
 
             if (Instance == null)
                 Instance = this;
@@ -53,8 +54,8 @@ namespace Shinkan2024.Scripts.Game.Point
         /// <param name="val"></param>
         public void UpPoint(int val)
         {
-            //if (_point is null) return;
-            //_point.Value = _point.Value.Add(new Point(val));
+            if (_point is null) return;
+            _point.Value = _point.Value.Add(new Point(val));
         }
 
         private void DestroyInstance(Scene _)
