@@ -76,7 +76,7 @@ namespace Shinkan2025_Cooking.Ranking.Scripts
         public static void RegisterRankingData(RankingData data)
         {
             var scoreData = data.GetData<Score>();
-            //var pointData = data.GetData<Point>();
+            // var pointData = data.GetData<Point>();
             var nameData = data.GetData<PlayerName>();
             RegisterScore(scoreData);
             //RegisterPoint(pointData);

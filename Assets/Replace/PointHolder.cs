@@ -24,8 +24,7 @@ namespace Shinkan2024.Scripts.Game.Point
         void Start()
         {
             SetStorage();
-            //後でValueを0にしとく
-            _point.Value = new Point(123);
+            _point.Value = new Point(0);
 
             _point
                 .Subscribe(value => SendData(value))
@@ -55,8 +54,8 @@ namespace Shinkan2024.Scripts.Game.Point
         /// <param name="val"></param>
         public void UpPoint(int val)
         {
-            //if (_point is null) return;
-            //_point.Value = _point.Value.Add(new Point(val));
+            if (_point is null) return;
+            _point.Value = _point.Value.Add(new Point(val));
         }
 
         private void DestroyInstance(Scene _)
