@@ -13,10 +13,21 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
         [SerializeField] private bool _enableStepUp = true; // ステップアップ機能のON/OFF
         [SerializeField] [Range(1, 5)] private int _maxStepHeight = 1; // 乗り越えられる最大の段差（ボクセル単位）
         [SerializeField] private float _stepUpPower = 0.1f;
+        private bool gamemode=true;
 
 
         private Rigidbody _rb;
         private BoxCollider _collider;
+        public void InVoxelMode()
+        {
+            gamemode = true;
+            _collider.isTrigger = true;
+        }
+        public void OutVoxelMode()
+        {
+            gamemode = false;
+            _collider.isTrigger = false;
+        }
 
         void Awake()
         {
@@ -26,8 +37,10 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
         
         void FixedUpdate()
         {
+            if (!gamemode)return;
             bool grounded = IsGrounded();
             Vector3 velocity = _rb.linearVelocity;
+            
 
             // 1. 接地状態の処理
             // もし地面にいて、かつ下向きの速度があるなら（重力で沈むのを防ぐ）
@@ -78,7 +91,7 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
             }
         
             // Y軸（上下）の移動
-            // if (moveDelta.y > 0 && CheckAxisCollision(Vector3.up, currentBounds, moveDelta)) velocity.y = 0;
+            if (moveDelta.y > 0 && CheckAxisCollision(Vector3.up, currentBounds, moveDelta)) velocity.y = 0;
 
             _rb.linearVelocity = velocity;
             

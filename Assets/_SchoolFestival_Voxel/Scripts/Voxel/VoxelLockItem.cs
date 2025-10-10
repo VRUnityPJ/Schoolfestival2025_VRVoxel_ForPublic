@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using R3;
+using Ranking.Demo.Scripts.DemoGame;
 using UnityEngine.Serialization;
 
 public class VoxelLockItem : MonoBehaviour
@@ -15,12 +17,9 @@ public class VoxelLockItem : MonoBehaviour
     void Start()
     {
         TryGetComponent<Rigidbody>(out _rigidBody);
-        // chunkManager.OnVoxelRecreated += CheckIfUnearthed;
-    }
-    private void OnDestroy()
-    {
-        // シーン終了時にイベントから解除
-        // chunkManager.OnVoxelRecreated -= CheckIfUnearthed;
+        _chunkManager.OnVoxelRecreated
+                        .Subscribe(input => CheckIfUnearthed())
+                        .AddTo(this);
     }
 
     // 地形が破壊された時などに呼び出す関数
@@ -43,6 +42,15 @@ public class VoxelLockItem : MonoBehaviour
             // レンダラーやコライダーを有効化する処理
             // GetComponent<MeshRenderer>().enabled = true;
             // GetComponent<Collider>().enabled = true;
+        }
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.TryGetComponent(out Player player))
+        {
+            player.AddScore(100);
+            Destroy((this.gameObject));
         }
     }
 }

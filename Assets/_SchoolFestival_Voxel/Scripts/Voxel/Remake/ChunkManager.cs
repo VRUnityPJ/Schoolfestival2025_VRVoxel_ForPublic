@@ -6,6 +6,7 @@ using VoxReader;
 using VoxReader.Interfaces;
 using UnityEngine;
 using ZLinq;
+using R3;
 using Vector3 = UnityEngine.Vector3;
 
 public readonly struct VoxelData
@@ -49,16 +50,35 @@ public class ChunkManager : MonoBehaviour
 
     // ====== グローバルVoxelデータ ======
     private VoxelData[,,] _globalVoxelData;
+    private VoxelData[,,] _initialVoxelData;
     private int _globalSizeX, _globalSizeY, _globalSizeZ;
     
     // 実行時に使用するマテリアル関連のデータ
     private Material[] _activeMaterials; // 実際にモデルで使われるマテリアルの配列
     private Dictionary<int, int> _paletteIndexToSubMeshIndexMap; // .voxパレットID -> サブメッシュID の対応表
 
+    
+    public Observable<Unit> OnVoxelRecreated => _onVoxelRecreated;
+    private readonly Subject<Unit> _onVoxelRecreated = new();
+
     private void Start()
     {
+        
         LoadVoxelModel();
         CreateChunks();
+    }
+
+    public void ResetStage()
+    {
+        
+        // _globalVoxelData = _initialVoxelData;
+        Array.Copy(_initialVoxelData, _globalVoxelData, _initialVoxelData.Length);
+        var allChunkCoords = new HashSet<Tuple<int, int, int>>();
+        foreach (var chunkCoord in _chunkDic.Keys)
+        {
+            allChunkCoords.Add(new Tuple<int, int, int>(chunkCoord.x, chunkCoord.y, chunkCoord.z));
+        }
+        RebuildChunks(allChunkCoords);
     }
 
     private void LoadVoxelModel()
@@ -98,7 +118,6 @@ public class ChunkManager : MonoBehaviour
             {
                 paletteIndexToMaterial[i] = mat; // MagicaVoxelのパレットIDは1-based
             }
-            Debug.Log(voxColor);
         }
 
         // ★ デバッグログを追加
@@ -133,6 +152,7 @@ public class ChunkManager : MonoBehaviour
         _globalSizeY = (int)model.LocalSize.Y;
         _globalSizeZ = (int)model.LocalSize.Z;
         _globalVoxelData = new VoxelData[_globalSizeX, _globalSizeY, _globalSizeZ];
+        _initialVoxelData = new VoxelData[_globalSizeX, _globalSizeY, _globalSizeZ];
 
         foreach (Voxel voxel in model.Voxels)
         {
@@ -152,7 +172,7 @@ public class ChunkManager : MonoBehaviour
                 _globalVoxelData[x, y, z] = new VoxelData(1,0);
             }
         }
-        
+        Array.Copy(_globalVoxelData, _initialVoxelData, _globalVoxelData.Length);
         Debug.Log($"MagicaVoxelモデルを読み込みました。サイズ: ({_globalSizeX}, {_globalSizeY}, {_globalSizeZ})");
     }
 
@@ -217,7 +237,7 @@ public class ChunkManager : MonoBehaviour
             point.y < 0 || point.y >= _globalSizeY ||
             point.z < 0 || point.z >= _globalSizeZ)
         {
-            return false; 
+            return true; 
         }
         if (_globalVoxelData[point.x, point.y, point.z].density > 0)
         {
@@ -238,7 +258,44 @@ public class ChunkManager : MonoBehaviour
                 chunkRenderer.GenerateSurfaceNetsMesh(_globalVoxelData, chunkStartPos, chunkResolution, voxelSize, _activeMaterials);
             }
         }
+        _onVoxelRecreated.OnNext(Unit.Default);
     }
+    /*
+    public void RebuildChunks(HashSet<Tuple<int,int,int>> affectedChunks)
+    {
+        // ★ 修正点: 再生成対象のチャンク（元のチャンク＋隣接チャンク）を格納する新しいHashSetを作成
+        HashSet<Vector3Int> chunksToRebuild = new HashSet<Vector3Int>();
+
+        // 影響があったチャンクとその6方向の隣接チャンクをリストアップする
+        foreach (var chunkTuple in affectedChunks)
+        {
+            Vector3Int chunkCoord = new Vector3Int(chunkTuple.Item1, chunkTuple.Item2, chunkTuple.Item3);
+
+            // 1. 影響があったチャンク自体を追加
+            chunksToRebuild.Add(chunkCoord);
+
+            // 2. 隣接する6方向のチャンクを追加
+            chunksToRebuild.Add(chunkCoord + Vector3Int.right);   // (x+1, y, z)
+            chunksToRebuild.Add(chunkCoord + Vector3Int.left);    // (x-1, y, z)
+            chunksToRebuild.Add(chunkCoord + Vector3Int.up);      // (x, y+1, z)
+            chunksToRebuild.Add(chunkCoord + Vector3Int.down);    // (x, y-1, z)
+            chunksToRebuild.Add(new Vector3Int(chunkCoord.x, chunkCoord.y, chunkCoord.z + 1)); // (x, y, z+1)
+            chunksToRebuild.Add(new Vector3Int(chunkCoord.x, chunkCoord.y, chunkCoord.z - 1)); // (x, y, z-1)
+        }
+
+        // 最終的にリストアップされた全てのチャンクを再生成する
+        foreach (var chunkCoord in chunksToRebuild)
+        {
+            // 辞書に存在しないチャンク（範囲外など）は無視する
+            if (_chunkDic.TryGetValue(chunkCoord, out ChunkRenderer chunkRenderer))
+            {
+                Vector3Int chunkStartPos = new Vector3Int(chunkCoord.x * chunkResolution, chunkCoord.y * chunkResolution, chunkCoord.z * chunkResolution);
+                chunkRenderer.GenerateSurfaceNetsMesh(_globalVoxelData, chunkStartPos, chunkResolution, voxelSize, _activeMaterials);
+            }
+        }
+        
+        _onVoxelRecreated.OnNext(Unit.Default);
+    }*/
     
     public bool IsAllEmpty(Vector3Int startPoint, Vector3Int range)
     {

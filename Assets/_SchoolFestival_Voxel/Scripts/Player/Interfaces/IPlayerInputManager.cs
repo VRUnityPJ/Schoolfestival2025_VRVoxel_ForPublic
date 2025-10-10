@@ -13,6 +13,8 @@ namespace SchoolFestival_Voxel.Scripts.Player.Interfaces
         public Observable<Unit> OnBoostRight { get; }
         public Observable<Unit> OnInputLeftTrigger { get; }
         public Observable<Unit> OnInputRightTrigger { get; }
+        public Observable<Unit> OnFloat { get; }
+        public Observable<Unit> OnFloatCanceled { get; }
         public Observable<Vector2> OnTurn { get; }
         public Observable<Vector2> OnMove { get; }
     }

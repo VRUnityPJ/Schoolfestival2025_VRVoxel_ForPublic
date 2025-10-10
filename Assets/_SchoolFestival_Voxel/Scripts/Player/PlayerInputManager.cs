@@ -14,6 +14,8 @@ namespace SchoolFestival_Voxel.Scripts.Player
         public Observable<Unit> OnBoostRight => _onBoostRight;
         public Observable<Unit> OnInputLeftTrigger => _onInputLeftTrigger;
         public Observable<Unit> OnInputRightTrigger => _onInputRightTrigger;
+        public Observable<Unit> OnFloat => _onFloat;
+        public Observable<Unit> OnFloatCanceled => _onFloatCanceled;
         public Observable<Vector2> OnTurn => _onTurn;
         public Observable<Vector2> OnMove => _onMove;
         
@@ -27,6 +29,8 @@ namespace SchoolFestival_Voxel.Scripts.Player
         private readonly Subject<Unit> _onInputRightTrigger = new();
         private readonly Subject<Vector2> _onTurn = new();
         private readonly Subject<Vector2> _onMove = new();
+        private readonly Subject<Unit> _onFloat = new();
+        private readonly Subject<Unit> _onFloatCanceled = new();
         
         private MainInput _mainInput;
 
@@ -45,6 +49,8 @@ namespace SchoolFestival_Voxel.Scripts.Player
             _mainInput.Player.LeftGrappleBoost.started += _ => _onBoostLeft.OnNext(Unit.Default);
             _mainInput.Player.RightGrappleBoost.started += _ => _onBoostRight.OnNext(Unit.Default);
             */
+            _mainInput.Player.LeftControllerAction1.started += _ => _onFloat.OnNext(Unit.Default);
+            _mainInput.Player.LeftControllerAction1.canceled += _ => _onFloatCanceled.OnNext(Unit.Default);
             _mainInput.Player.Turn.started += context => _onTurn.OnNext(context.ReadValue<Vector2>());
         }
 
@@ -53,7 +59,6 @@ namespace SchoolFestival_Voxel.Scripts.Player
         {
             // 移動入力を毎フレーム送信
             _onMove.OnNext(_mainInput.Player.Move.ReadValue<Vector2>());
-            Debug.Log("Move"+ _mainInput.Player.Move.ReadValue<Vector2>() );
         }
     }
 }
