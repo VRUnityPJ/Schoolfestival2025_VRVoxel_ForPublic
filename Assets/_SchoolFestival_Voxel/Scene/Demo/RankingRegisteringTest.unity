@@ -349,8 +349,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fe6ee2fa42b5154390c6fcbb59b236c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerScoreHolder: {fileID: 1104065865}
-  rankingStorage: {fileID: 1096193862}
+  _rankingStorage: {fileID: 0}
 --- !u!4 &652814824
 Transform:
   m_ObjectHideFlags: 0
@@ -397,6 +396,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _initializeSceneNames:
   - RankingRegisteringTest
+  - Ranking
   _database: {fileID: 11400000, guid: 912b7354008c705428b770710cee8d2b, type: 2}
 --- !u!4 &1096193863
 Transform:
