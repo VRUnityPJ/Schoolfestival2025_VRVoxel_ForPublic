@@ -1,5 +1,6 @@
 using UnityEngine;
 using R3;
+using Ranking.Demo.Scripts.DemoGame;
 using UnityEngine.Serialization;
 
 public class VoxelLockItem : MonoBehaviour
@@ -11,17 +12,22 @@ public class VoxelLockItem : MonoBehaviour
 
     // アイテムを囲むチェック範囲（3x3x3のグリッドをチェック）
     [SerializeField]private Vector3Int _checkBounds = new (3, 3, 3);
+    
+    private Transform _startTransform;
 
     void Start()
     {
+        _startTransform = transform;
         TryGetComponent<Rigidbody>(out _rigidBody);
         // chunkManager.OnVoxelRecreated += CheckIfUnearthed;
+        _chunkManager.OnVoxelRecreated
+            .Subscribe(input => CheckIfUnearthed())
+            .AddTo(this);
+        _chunkManager.OnVoxelReset
+            .Subscribe(input => Reset())
+            .AddTo(this);
     }
-    private void OnDestroy()
-    {
-        // シーン終了時にイベントから解除
-        // chunkManager.OnVoxelRecreated -= CheckIfUnearthed;
-    }
+  
 
     // 地形が破壊された時などに呼び出す関数
     public void CheckIfUnearthed()
@@ -43,6 +49,22 @@ public class VoxelLockItem : MonoBehaviour
             // レンダラーやコライダーを有効化する処理
             // GetComponent<MeshRenderer>().enabled = true;
             // GetComponent<Collider>().enabled = true;
+        }
+    }
+
+    public void Reset()
+    {
+        _rigidBody.isKinematic = true;
+        this.gameObject.SetActive(true);
+        transform.position = _startTransform.position;
+        _isUnearthed = false;
+    }
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.TryGetComponent(out Player player))
+        {
+            player.AddScore(100);
+            gameObject.SetActive(false);
         }
     }
 }
