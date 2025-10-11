@@ -16,6 +16,10 @@ namespace SchoolFestival_Voxel.Scripts.Player
         public Observable<Unit> OnInputRightTrigger => _onInputRightTrigger;
         public Observable<Vector2> OnTurn => _onTurn;
         public Observable<Vector2> OnMove => _onMove;
+        public Observable<Unit> OnFloatLeft => _onFloatLeft;
+        public Observable<Unit> OnFloatCanceledLeft => _onFloatCanceledLeft;
+        public Observable<Unit> OnFloatRight => _onFloatRight;
+        public Observable<Unit> OnFloatCanceledRight => _onFloatCanceledRight;
         
         private readonly Subject<Unit> _onShootLeftWire = new();
         private readonly Subject<Unit> _onShootRightWire = new();
@@ -27,6 +31,10 @@ namespace SchoolFestival_Voxel.Scripts.Player
         private readonly Subject<Unit> _onInputRightTrigger = new();
         private readonly Subject<Vector2> _onTurn = new();
         private readonly Subject<Vector2> _onMove = new();
+        private readonly Subject<Unit> _onFloatLeft = new();
+        private readonly Subject<Unit> _onFloatCanceledLeft = new();
+        private readonly Subject<Unit> _onFloatRight = new();
+        private readonly Subject<Unit> _onFloatCanceledRight = new();
         
         private MainInput _mainInput;
 
@@ -46,6 +54,10 @@ namespace SchoolFestival_Voxel.Scripts.Player
             _mainInput.Player.RightGrappleBoost.started += _ => _onBoostRight.OnNext(Unit.Default);
             */
             _mainInput.Player.Turn.started += context => _onTurn.OnNext(context.ReadValue<Vector2>());
+            _mainInput.Player.LeftControllerAction1.started += _ => _onFloatLeft.OnNext(Unit.Default);
+            _mainInput.Player.LeftControllerAction1.canceled += _ => _onFloatCanceledLeft.OnNext(Unit.Default);
+            _mainInput.Player.RightControllerAction1.started += _ => _onFloatRight.OnNext(Unit.Default);
+            _mainInput.Player.RightControllerAction1.canceled += _ => _onFloatCanceledRight.OnNext(Unit.Default);
         }
 
         // RigidBodyなどの物理演算に関わるものはUpdateではなくFixedUpdateで処理する
@@ -53,7 +65,6 @@ namespace SchoolFestival_Voxel.Scripts.Player
         {
             // 移動入力を毎フレーム送信
             _onMove.OnNext(_mainInput.Player.Move.ReadValue<Vector2>());
-            Debug.Log("Move"+ _mainInput.Player.Move.ReadValue<Vector2>() );
         }
     }
 }
