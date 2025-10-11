@@ -87,5 +87,10 @@ namespace KeyBoard
             //最後の一文字を削除
             _TypedText.Value = _TypedText.Value.Remove(lastCharElement);
         }
+
+        public void ResetText()
+        {
+            _TypedText.Value = "";
+        }
     }
 }
