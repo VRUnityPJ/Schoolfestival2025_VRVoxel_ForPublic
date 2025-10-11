@@ -39,5 +39,15 @@ namespace Ranking.Demo.Scripts.DemoGame
         {
             _score.Value =  _score.Value.Add(new Score(num));
         }
+
+        public void ResetScore()
+        {
+            _score.Value = _score.Value.Add(new Score(0));
+        }
+
+        public Score GetScore()
+        {
+            return _score.Value;
+        }
     }
 }

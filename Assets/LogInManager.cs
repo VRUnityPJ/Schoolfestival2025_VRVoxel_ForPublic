@@ -7,6 +7,11 @@ public class LogInManager : MonoBehaviour
 {
     void Start()
     {
+        LogIn();
+    }
+
+    public void LogIn()
+    {
         PlayFabManager.LogIn();
     }
 }
