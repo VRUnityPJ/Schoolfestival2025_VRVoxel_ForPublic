@@ -4,7 +4,7 @@ namespace Ranking.Scripts
 {
     public class Score : IRankingDataElement<Score>
     {
-        private readonly int _intValue;
+        private int _intValue;
         public int IntValue => _intValue;
         
         /// <summary>
