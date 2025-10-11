@@ -4,6 +4,8 @@ using SchoolFestival_Voxel.Scripts.Player.Interfaces;
 using UnityEngine;
 using VContainer;
 using System;
+using NUnit.Framework.Constraints;
+
 namespace SchoolFestival_Voxel.Scripts.Player
 {
     public class PlayerMovement : MonoBehaviour
@@ -19,6 +21,7 @@ namespace SchoolFestival_Voxel.Scripts.Player
         /// </summary>
         [Header("Parameters")]
         [SerializeField] private float _maxSpeed = 5f;
+        [SerializeField] private float _floatPower = 100f;
         
 
         [Header("Ground Cast Setting")] 
@@ -33,6 +36,8 @@ namespace SchoolFestival_Voxel.Scripts.Player
         private IPlayerInputManager _playerInputManager;
         private MainInput _mainInput;
         private bool _isMovable = true;
+        private bool _isFloatingLeft = false;
+        private bool _isFloatingRight = false;
         
         /// <summary>
         /// これがVContainer？よくわからない…
@@ -43,6 +48,8 @@ namespace SchoolFestival_Voxel.Scripts.Player
         {
             _playerInputManager = playerInputManager;
         }
+        public void InGame() =>_isMovable = true;
+        public void OutGame() =>_isMovable = false;
 
         private void Start()
         {
@@ -51,6 +58,18 @@ namespace SchoolFestival_Voxel.Scripts.Player
                 .AddTo(this);
             _isGround
                 .Subscribe(OnChangeIsGround)
+                .AddTo(this);
+            _playerInputManager.OnFloatLeft
+                .Subscribe(_ => _isFloatingLeft = true)
+                .AddTo(this);
+            _playerInputManager.OnFloatCanceledLeft
+                .Subscribe(_ => _isFloatingLeft = false)
+                .AddTo(this);
+            _playerInputManager.OnFloatRight
+                .Subscribe(_ => _isFloatingRight = true)
+                .AddTo(this);
+            _playerInputManager.OnFloatCanceledRight
+                .Subscribe(_ => _isFloatingRight = false)
                 .AddTo(this);
             /*
             GameJudge.instance?
@@ -88,6 +107,12 @@ namespace SchoolFestival_Voxel.Scripts.Player
                 // targetVelocity *= _airMoveMultiplier;
             
             _rigidbody.AddForce(targetVelocity, ForceMode.Force);
+            Float();
+        }
+        private void Float()
+        {
+            if (_isFloatingLeft|| _isFloatingRight)
+                _rigidbody.AddForce(Vector3.up * _floatPower, ForceMode.Force);
         }
 
         private void OnChangeIsGround(bool isGround)

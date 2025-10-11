@@ -7,6 +7,7 @@ using VoxReader.Interfaces;
 using UnityEngine;
 using ZLinq;
 using Vector3 = UnityEngine.Vector3;
+using R3;
 
 public readonly struct VoxelData
 {
@@ -49,11 +50,16 @@ public class ChunkManager : MonoBehaviour
 
     // ====== グローバルVoxelデータ ======
     private VoxelData[,,] _globalVoxelData;
+    private VoxelData[,,] _initialVoxelData;
     private int _globalSizeX, _globalSizeY, _globalSizeZ;
     
     // 実行時に使用するマテリアル関連のデータ
     private Material[] _activeMaterials; // 実際にモデルで使われるマテリアルの配列
     private Dictionary<int, int> _paletteIndexToSubMeshIndexMap; // .voxパレットID -> サブメッシュID の対応表
+    public Observable<Unit> OnVoxelRecreated => _onVoxelRecreated;
+    private readonly Subject<Unit> _onVoxelRecreated = new();
+    public Observable<Unit> OnVoxelReset => _onVoxelReset;
+    private readonly Subject<Unit> _onVoxelReset = new();
 
     private void Start()
     {
@@ -133,6 +139,7 @@ public class ChunkManager : MonoBehaviour
         _globalSizeY = (int)model.LocalSize.Y;
         _globalSizeZ = (int)model.LocalSize.Z;
         _globalVoxelData = new VoxelData[_globalSizeX, _globalSizeY, _globalSizeZ];
+        _initialVoxelData = new VoxelData[_globalSizeX, _globalSizeY, _globalSizeZ];
 
         foreach (Voxel voxel in model.Voxels)
         {
@@ -152,8 +159,22 @@ public class ChunkManager : MonoBehaviour
                 _globalVoxelData[x, y, z] = new VoxelData(1,0);
             }
         }
+        Array.Copy(_globalVoxelData, _initialVoxelData, _globalVoxelData.Length);
         
         Debug.Log($"MagicaVoxelモデルを読み込みました。サイズ: ({_globalSizeX}, {_globalSizeY}, {_globalSizeZ})");
+    }
+    public void ResetStage()
+    {
+
+        // _globalVoxelData = _initialVoxelData;
+        Array.Copy(_initialVoxelData, _globalVoxelData, _initialVoxelData.Length);
+        var allChunkCoords = new HashSet<Tuple<int, int, int>>();
+        foreach (var chunkCoord in _chunkDic.Keys)
+        {
+            allChunkCoords.Add(new Tuple<int, int, int>(chunkCoord.x, chunkCoord.y, chunkCoord.z));
+        }
+        RebuildChunks(allChunkCoords);
+        _onVoxelReset.OnNext(Unit.Default);
     }
 
     /// <summary>
@@ -217,7 +238,7 @@ public class ChunkManager : MonoBehaviour
             point.y < 0 || point.y >= _globalSizeY ||
             point.z < 0 || point.z >= _globalSizeZ)
         {
-            return false; 
+            return true; 
         }
         if (_globalVoxelData[point.x, point.y, point.z].density > 0)
         {
@@ -238,6 +259,7 @@ public class ChunkManager : MonoBehaviour
                 chunkRenderer.GenerateSurfaceNetsMesh(_globalVoxelData, chunkStartPos, chunkResolution, voxelSize, _activeMaterials);
             }
         }
+        _onVoxelRecreated.OnNext(Unit.Default);
     }
     
     public bool IsAllEmpty(Vector3Int startPoint, Vector3Int range)
