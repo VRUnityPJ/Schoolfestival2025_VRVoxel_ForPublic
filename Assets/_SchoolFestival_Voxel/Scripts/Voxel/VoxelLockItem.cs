@@ -13,6 +13,7 @@ public class VoxelLockItem : MonoBehaviour
     // アイテムを囲むチェック範囲（3x3x3のグリッドをチェック）
     [SerializeField]private Vector3Int _checkBounds = new (3, 3, 3);
     
+    
     private Transform _startTransform;
 
     void Start()
@@ -61,9 +62,10 @@ public class VoxelLockItem : MonoBehaviour
     }
     public void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.TryGetComponent(out Player player))
+        if (other.gameObject.TryGetComponent(out Player player)&& _isUnearthed)
         {
             player.AddScore(100);
+            
             gameObject.SetActive(false);
         }
     }

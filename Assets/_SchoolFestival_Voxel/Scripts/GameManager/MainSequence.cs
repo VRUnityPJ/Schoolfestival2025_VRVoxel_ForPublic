@@ -78,6 +78,7 @@ namespace _SchoolFestival_Voxel.Scripts.GameManager
                 cts.Cancel();
                 _rankingStorage.Register();
                 _playerMovement.OutGame();
+                _timePresenter.gameObject.SetActive(false);
                 
 
                 await _scorePresenter.ShowScoreAnimationAsync(destroyCancellationToken);
