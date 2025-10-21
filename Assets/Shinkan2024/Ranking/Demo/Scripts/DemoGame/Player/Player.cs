@@ -8,6 +8,8 @@ namespace Ranking.Demo.Scripts.DemoGame
     public class Player : MonoBehaviour,IPlayer
     {
         private PlayerScoreHolder _holder;
+        [SerializeField] private AudioSource _audioSource;
+        [SerializeField] private AudioClip _getPointClip;
 
         private void Start()
         {
@@ -19,6 +21,7 @@ namespace Ranking.Demo.Scripts.DemoGame
         public void AddScore(int num)
         {
             _holder.AddScore(num);
+            _audioSource.PlayOneShot(_getPointClip);
         }
     }
 }
