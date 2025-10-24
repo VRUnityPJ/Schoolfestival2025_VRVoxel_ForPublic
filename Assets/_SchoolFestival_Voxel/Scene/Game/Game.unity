@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 71f14a2d79f732f4d9893ef1b911f4ff, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -28054,6 +28054,7 @@ GameObject:
   - component: {fileID: 1990058025}
   - component: {fileID: 1990058024}
   - component: {fileID: 1990058026}
+  - component: {fileID: 1990058027}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -28117,6 +28118,19 @@ MonoBehaviour:
   _keyboardPoint: {fileID: 2094003821}
   _stagePoint: {fileID: 1774535704}
   _player: {fileID: 6589298285336149691}
+--- !u!114 &1990058027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1990058023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f6b5506d74a401fb3ba855a8cf5ad53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rotationSpeed: 0.5
 --- !u!1 &2004705024 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8113481951843090584, guid: 3d00e6b2ce272544e8a81967eee5df64, type: 3}
