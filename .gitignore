@@ -99,3 +99,19 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+Assets/Skybox.meta
+Assets/Skybox/Cubemaps.meta
+Assets/Skybox/Materials.meta
+Assets/Skybox/Scene.meta
+Assets/Skybox/Cubemaps/daytime.hdr
+Assets/Skybox/Cubemaps/daytime.hdr.meta
+Assets/Skybox/Cubemaps/sunset.hdr
+Assets/Skybox/Cubemaps/sunset.hdr.meta
+Assets/Skybox/Materials/Skybox_Daytime.mat
+Assets/Skybox/Materials/Skybox_Daytime.mat.meta
+Assets/Skybox/Materials/Skybox_Sunset.mat
+Assets/Skybox/Materials/Skybox_Sunset.mat.meta
+Assets/Skybox/Scene/mainScene.unity
+Assets/Skybox/Scene/mainScene.unity.meta
+Assets/Skybox/Scene/mainSceneSettings.lighting
+Assets/Skybox/Scene/mainSceneSettings.lighting.meta
