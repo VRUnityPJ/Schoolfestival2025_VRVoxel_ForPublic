@@ -9,8 +9,8 @@ namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake
         private float swingThreshold = -0.7f;
         [SerializeField]
         private float swingSpeed = 4f;
-        [SerializeField] private RemakeMeshDestroyer _meshDestroyer;
-        [SerializeField] private ChunkManager _chunkManager;
+        public RemakeMeshDestroyer _meshDestroyer;
+        public ChunkManager _chunkManager;
         [SerializeField] private float _destroyRadius = 0.5f; // 破壊する球の半径
         [SerializeField]private GameObject _playerP;
         [SerializeField]private AudioSource _crashAudio;
