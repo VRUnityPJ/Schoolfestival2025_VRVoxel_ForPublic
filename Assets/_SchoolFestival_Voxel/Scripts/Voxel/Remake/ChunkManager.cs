@@ -53,6 +53,8 @@ public class ChunkManager : MonoBehaviour
     private VoxelData[,,] _initialVoxelData;
     private int _globalSizeX, _globalSizeY, _globalSizeZ;
     
+    private Vector3Int _voxelWorldOrigin;
+    
     // 実行時に使用するマテリアル関連のデータ
     private Material[] _activeMaterials; // 実際にモデルで使われるマテリアルの配列
     private Dictionary<int, int> _paletteIndexToSubMeshIndexMap; // .voxパレットID -> サブメッシュID の対応表
@@ -63,6 +65,10 @@ public class ChunkManager : MonoBehaviour
 
     private void Start()
     {
+        _voxelWorldOrigin = Vector3Int.FloorToInt(transform.position / voxelSize);
+        
+        // ★追加: 座標ズレを防ぐため、ChunkManager自体のTransformをグリッドにスナップ
+        transform.position = (Vector3)_voxelWorldOrigin * voxelSize;
         LoadVoxelModel();
         CreateChunks();
     }
@@ -209,7 +215,8 @@ public class ChunkManager : MonoBehaviour
 
                     GameObject chunkObject = new GameObject($"Chunk ({x}, {y}, {z})");
                     chunkObject.transform.parent = this.transform;
-                    chunkObject.transform.position = (Vector3)chunkStartPos * voxelSize;
+                    // chunkObject.transform.position = (Vector3)chunkStartPos * voxelSize;
+                    chunkObject.transform.localPosition = (Vector3)chunkStartPos * voxelSize;
                     
                     ChunkRenderer chunkRenderer = chunkObject.AddComponent<ChunkRenderer>();
                     
@@ -229,14 +236,22 @@ public class ChunkManager : MonoBehaviour
     {
         return chunkResolution;
     }
+    /*
     
     public bool IsSolid(Vector3Int point)
     {
         // --- 境界チェック ---
         // もしチェック対象が密度データの範囲外なら、そこは「空」として扱う
-        if (point.x < 0 || point.x >= _globalSizeX ||
-            point.y < 0 || point.y >= _globalSizeY ||
-            point.z < 0 || point.z >= _globalSizeZ)
+        if (point.x < -1 || point.x > _globalSizeX ||
+            point.y < -1 || point.y > _globalSizeY ||
+            point.z < -1 || point.z > _globalSizeZ)
+        {
+            return false; 
+        }
+        //落下防止の壁を作る
+        if (point.x == -1 || point.x == _globalSizeX ||
+                 point.y == -1 || point.y == _globalSizeY ||
+                 point.z == -1 || point.z == _globalSizeZ)
         {
             return true; 
         }
@@ -246,8 +261,37 @@ public class ChunkManager : MonoBehaviour
             return true;
         }
         return false;
-    }
+    }*/
 
+    public bool IsSolid(Vector3Int worldPoint) // 引数名を worldPoint に変更すると分かりやすい
+    {
+        // ★追加: ワールド座標をローカルのVoxelDataインデックスに変換
+        Vector3Int localPoint = worldPoint - _voxelWorldOrigin;
+        
+        // --- 境界チェック --- (ローカル座標でチェック)
+        // もしチェック対象が密度データの範囲外なら、そこは「空」として扱う
+        if (localPoint.x < -1 || localPoint.x > _globalSizeX ||
+            localPoint.y < -1 || localPoint.y > _globalSizeY ||
+            localPoint.z < -1 || localPoint.z > _globalSizeZ)
+        {
+            return false; 
+        }
+        //落下防止の壁を作る
+        if (localPoint.x == -1 || localPoint.x == _globalSizeX ||
+            localPoint.y == -1 || localPoint.y == _globalSizeY ||
+            localPoint.z == -1 || localPoint.z == _globalSizeZ)
+        {
+            return true; 
+        }
+        
+        // ★修正: localPoint を使って配列にアクセス
+        if (_globalVoxelData[localPoint.x, localPoint.y, localPoint.z].density > 0)
+        {
+            //1なのでVoxelが存在している
+            return true;
+        }
+        return false;
+    }
     public void RebuildChunks(HashSet<Tuple<int,int,int>> affectedChunks)
     {
         foreach (var chunkTuple in affectedChunks)
@@ -261,7 +305,7 @@ public class ChunkManager : MonoBehaviour
         }
         _onVoxelRecreated.OnNext(Unit.Default);
     }
-    
+    /*
     public bool IsAllEmpty(Vector3Int startPoint, Vector3Int range)
     {
         // 指定された範囲をループしてチェック
@@ -297,6 +341,42 @@ public class ChunkManager : MonoBehaviour
 
         // ループをすべて完走した場合、固形物は一つも見つからなかった
         return true; // よって「すべて空である」と確定。trueを返す
+    }*/
+    public bool IsAllEmpty(Vector3Int worldStartPoint, Vector3Int range) // 引数名を変更
+    {
+        // ★追加: ワールド座標をローカルのVoxelDataインデックスに変換
+        Vector3Int localStartPoint = worldStartPoint - _voxelWorldOrigin;
+
+        // 指定された範囲をループしてチェック
+        for (int x = 0; x < range.x; x++)
+        {
+            for (int y = 0; y < range.y; y++)
+            {
+                for (int z = 0; z < range.z; z++)
+                {
+                    // チェック対象のローカル座標を計算
+                    int checkX = localStartPoint.x + x;
+                    int checkY = localStartPoint.y + y;
+                    int checkZ = localStartPoint.z + z;
+
+                    // --- 境界チェック ---
+                    if (checkX < 0 || checkX >= _globalSizeX ||
+                        checkY < 0 || checkY >= _globalSizeY ||
+                        checkZ < 0 || checkZ >= _globalSizeZ)
+                    {
+                        continue; // 次のボクセルへ
+                    }
+
+                    // --- 密度チェック ---
+                    // ★修正: >= 0 から > 0 に変更 (IsSolidとロジックを合わせる)
+                    if (_globalVoxelData[checkX, checkY, checkZ].density > 0)
+                    {
+                        return false; // その時点で「すべて空ではない」と確定。即座にfalseを返す
+                    }
+                }
+            }
+        }
+        return true;
     }
 }
 

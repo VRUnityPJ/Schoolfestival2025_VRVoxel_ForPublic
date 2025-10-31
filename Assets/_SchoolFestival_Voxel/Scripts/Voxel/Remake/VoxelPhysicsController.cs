@@ -7,7 +7,7 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
     [RequireComponent(typeof(BoxCollider))]
     public class VoxelPhysicsController : MonoBehaviour
     {
-        [SerializeField] private ChunkManager _chunkManager;
+        public ChunkManager _chunkManager;
         [SerializeField] private float _collisionPadding = 0.01f; // 衝突判定の僅かな余白
         [SerializeField] private float _groundCheckDistance = 0.05f;
         [SerializeField] private bool _enableStepUp = true; // ステップアップ機能のON/OFF
