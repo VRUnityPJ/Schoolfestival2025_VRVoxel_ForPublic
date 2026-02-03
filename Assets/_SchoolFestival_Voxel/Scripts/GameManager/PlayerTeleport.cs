@@ -9,6 +9,7 @@ namespace _SchoolFestival_Voxel.Scripts.GameManager
     {
         [SerializeField]private Transform _keyboardPoint;
         [SerializeField]private Transform _stagePoint;
+        [SerializeField]private Transform _tutorialPoint;
         [SerializeField]private GameObject _player;
         /// <summary>
         /// 初期化処理
@@ -16,6 +17,10 @@ namespace _SchoolFestival_Voxel.Scripts.GameManager
         public void Init()
         {
 
+        }
+        public async UniTask TutorialTeleportAsync(CancellationToken ct)
+        {
+            await Teleport(_tutorialPoint);
         }
         public async UniTask StageTeleportAsync(CancellationToken ct)
         {

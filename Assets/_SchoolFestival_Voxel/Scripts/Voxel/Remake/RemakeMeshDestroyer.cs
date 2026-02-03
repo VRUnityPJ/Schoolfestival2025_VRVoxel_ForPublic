@@ -34,6 +34,30 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
             if (!_chunkManager) return;
 
             float voxelSize = _chunkManager.voxelSize;
+            // ★追加: ChunkManagerのオフセット（原点）を取得
+            // ChunkManager.transform.position がボクセルワールドの原点（Unity単位）
+            Vector3 worldOrigin = _chunkManager.transform.position;
+            
+            // ★修正: worldPos をローカル座標（Unity単位）に変換
+            // (worldPos から ワールド原点を引く)
+            Vector3 localPos = worldPos - worldOrigin;
+
+            // ★修正: ローカル座標をボクセルグリッド座標に変換
+            float rGrid = radius / voxelSize;
+            // これが _globalVoxelData 配列のインデックスとして使える座標になる
+            Vector3 gridPosF = localPos / voxelSize; 
+
+            VoxelData[,,] global = _chunkManager.GetGlobalVoxelData();
+            int sx = global.GetLength(0), sy = global.GetLength(1), sz = global.GetLength(2);
+
+            // ★修正: 境界チェックの最大値を sx-1, sy-1, sz-1 に修正（配列の最大インデックス）
+            int minX = Mathf.Max(0, Mathf.FloorToInt(gridPosF.x - rGrid));
+            int maxX = Mathf.Min(sx - 1, Mathf.CeilToInt(gridPosF.x + rGrid)); // sx ではなく sx-1
+            int minY = Mathf.Max(0, Mathf.FloorToInt(gridPosF.y - rGrid));
+            int maxY = Mathf.Min(sy - 1, Mathf.CeilToInt(gridPosF.y + rGrid)); // sy ではなく sy-1
+            int minZ = Mathf.Max(0, Mathf.FloorToInt(gridPosF.z - rGrid));
+            int maxZ = Mathf.Min(sz - 1, Mathf.CeilToInt(gridPosF.z + rGrid)); // sz ではなく sz-1
+            /*
             float rGrid = radius / voxelSize;
             Vector3 gridPosF = worldPos / voxelSize;
 
@@ -46,6 +70,7 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
             int maxY = Mathf.Min(sy - 1, Mathf.CeilToInt(gridPosF.y + rGrid));
             int minZ = Mathf.Max(0, Mathf.FloorToInt(gridPosF.z - rGrid));
             int maxZ = Mathf.Min(sz - 1, Mathf.CeilToInt(gridPosF.z + rGrid));
+            */
 
             HashSet<Tuple<int,int,int>> affectedChunks = new HashSet<Tuple<int,int,int>>();
 

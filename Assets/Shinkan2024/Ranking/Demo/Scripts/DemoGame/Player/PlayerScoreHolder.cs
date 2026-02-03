@@ -42,7 +42,7 @@ namespace Ranking.Demo.Scripts.DemoGame
 
         public void ResetScore()
         {
-            _score.Value = _score.Value.Add(new Score(0));
+            _score.Value = new Score(0);
         }
 
         public Score GetScore()

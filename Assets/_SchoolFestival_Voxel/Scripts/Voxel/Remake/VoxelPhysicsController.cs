@@ -7,13 +7,13 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
     [RequireComponent(typeof(BoxCollider))]
     public class VoxelPhysicsController : MonoBehaviour
     {
-        [SerializeField] private ChunkManager _chunkManager;
+        public ChunkManager _chunkManager;
         [SerializeField] private float _collisionPadding = 0.01f; // 衝突判定の僅かな余白
         [SerializeField] private float _groundCheckDistance = 0.05f;
         [SerializeField] private bool _enableStepUp = true; // ステップアップ機能のON/OFF
         [SerializeField] [Range(1, 5)] private int _maxStepHeight = 1; // 乗り越えられる最大の段差（ボクセル単位）
         [SerializeField] private float _stepUpPower = 0.1f;
-        
+        [SerializeField] private float _speedDownRate = 0.9f;
 
 
         private Rigidbody _rb;
@@ -43,12 +43,15 @@ namespace SchoolFestival_Voxel.Scripts.Voxel.Remake
             if(!_isFloatMode)return;
             bool grounded = IsGrounded();
             Vector3 velocity = _rb.linearVelocity;
+            velocity.x *= _speedDownRate;
+            velocity.z *= _speedDownRate;
 
             // 1. 接地状態の処理
             // もし地面にいて、かつ下向きの速度があるなら（重力で沈むのを防ぐ）
             if (grounded && velocity.y < 0)
             {
                 velocity.y = 0;
+                
 
                 // ★★★ 以前の snapping（位置補正）処理をここに移動し、接地した瞬間だけに行う ★★★
                 // これにより、不必要な毎フレームの引き上げを防ぎ、ガタつきをなくす
