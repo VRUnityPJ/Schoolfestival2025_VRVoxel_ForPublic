@@ -1,4 +1,4 @@
-﻿namespace SchoolFestival_Voxel.Scripts.Player
+﻿namespace _SchoolFestival_Voxel.Scripts.Player
 {
     /// <summary>
     /// 手のタイプ

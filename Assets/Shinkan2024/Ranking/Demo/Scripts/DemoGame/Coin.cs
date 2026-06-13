@@ -1,6 +1,7 @@
+using Shinkan2024.Ranking.Demo.Scripts.DemoGame.Player;
 using UnityEngine;
 
-namespace Ranking.Demo.Scripts.DemoGame 
+namespace Shinkan2024.Ranking.Demo.Scripts.DemoGame 
 {
     public class Coin : MonoBehaviour
     {

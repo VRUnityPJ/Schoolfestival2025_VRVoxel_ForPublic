@@ -16,9 +16,7 @@ namespace _SchoolFestival_Voxel.Scripts.GameManager
 
         [SerializeField]
         private TextMeshProUGUI _countdownText;
-
-        [SerializeField]
-        private TextMeshProUGUI _instructText;
+        
 
         /// <summary>
         /// コライダーの衝突判定を非同期で待つために必要

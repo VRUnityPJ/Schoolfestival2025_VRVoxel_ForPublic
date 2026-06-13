@@ -1,9 +1,8 @@
-using Ranking.Scripts;
 using R3;
+using Shinkan2024.Ranking.Demo.Scripts.DemoGame.Player;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Ranking.Demo.Scripts.DemoGame
+namespace Shinkan2024.Ranking.Demo.Scripts.DemoGame.UI
 {
     public class ScoreUIPresenter : MonoBehaviour
     {

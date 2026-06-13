@@ -1,24 +1,28 @@
-using UnityEngine;
 using KeyBoard;
-public class DebugModeController : MonoBehaviour
+using UnityEngine;
+
+namespace Shinkan2024.Scripts.Game.Debug
 {
-    /// <summary>
-    /// デバッグモードに移行するテキスト
-    /// </summary>
-    private IKeyBoardEventTrigger _keyBoardEventTrigger;
-    void Start()
+    public class DebugModeController : MonoBehaviour
     {
-        //KeyBoardSettingを取得
-        if(!TryGetComponent(out _keyBoardEventTrigger))
-            Debug.LogError("KeyBoardEventTriggerが取得できません");
+        /// <summary>
+        /// デバッグモードに移行するテキスト
+        /// </summary>
+        private IKeyBoardEventTrigger _keyBoardEventTrigger;
+        void Start()
+        {
+            //KeyBoardSettingを取得
+            if(!TryGetComponent(out _keyBoardEventTrigger))
+                UnityEngine.Debug.LogError("KeyBoardEventTriggerが取得できません");
         
-        //イベントが存在するときAdd
-        _keyBoardEventTrigger.onTypedDebugText?.AddListener(OnEnterDebugMode);
-    }
-    private void OnEnterDebugMode()
-    {
-        Debug.Log("DEBUGイベント発火");
-        //DebugMode有効化
-        DebugMode.IsDebugModeOneTime = true;
+            //イベントが存在するときAdd
+            _keyBoardEventTrigger.onTypedDebugText?.AddListener(OnEnterDebugMode);
+        }
+        private void OnEnterDebugMode()
+        {
+            UnityEngine.Debug.Log("DEBUGイベント発火");
+            //DebugMode有効化
+            DebugMode.IsDebugModeOneTime = true;
+        }
     }
 }

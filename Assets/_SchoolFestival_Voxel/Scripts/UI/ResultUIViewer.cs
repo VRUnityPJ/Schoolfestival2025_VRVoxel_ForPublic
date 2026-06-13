@@ -63,6 +63,10 @@ namespace _SchoolFestival_Voxel.Scripts.UI
                 .DOScale(1f, 0.5f)
                 .SetEase(Ease.OutBack)
                 .ToUniTask(cancellationToken: token);
+            
+            
+            await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: token);
+            _finalScoreText.gameObject.SetActive(false);
         }
     }
 }

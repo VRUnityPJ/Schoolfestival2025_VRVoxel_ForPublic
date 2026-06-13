@@ -1,50 +1,49 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Shinkan2024.Scripts.Game.Utility;
 using UnityEngine;
 
-public class DemoTimer : MonoBehaviour
+namespace Shinkan2024.Scripts.Demo
 {
-    private static float time;
-    private static bool isMeasuring = false;
-    private void Start()
+    public class DemoTimer : MonoBehaviour
     {
-        time = 0f;
-    }
-
-    private void Update()
-    {
-        if(!isMeasuring)
-            return;
-
-        time += Time.deltaTime;
-    }
-
-    public static void StartMeasure()
-    {
-        time = 0;
-        isMeasuring = true;
-    }
-
-    public static string StopAndGetTime()
-    {
-        isMeasuring = false;
-        return ConvertTimeToString();
-    }
-
-    private static string ConvertTimeToString()
-    {
-        int min = 0;
-        int val = (int)time;
-        while (val >= 60)
+        private static float time;
+        private static bool isMeasuring = false;
+        private void Start()
         {
-            val -= 60;
-            min++;
+            time = 0f;
         }
 
-        int sec = val;
+        private void Update()
+        {
+            if(!isMeasuring)
+                return;
 
-        return $"{min}min:{sec}sec";
+            time += Time.deltaTime;
+        }
+
+        public static void StartMeasure()
+        {
+            time = 0;
+            isMeasuring = true;
+        }
+
+        public static string StopAndGetTime()
+        {
+            isMeasuring = false;
+            return ConvertTimeToString();
+        }
+
+        private static string ConvertTimeToString()
+        {
+            int min = 0;
+            int val = (int)time;
+            while (val >= 60)
+            {
+                val -= 60;
+                min++;
+            }
+
+            int sec = val;
+
+            return $"{min}min:{sec}sec";
+        }
     }
 }

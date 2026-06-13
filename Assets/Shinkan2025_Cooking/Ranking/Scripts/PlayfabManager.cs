@@ -4,8 +4,7 @@ using System.Text;
 using Cysharp.Threading.Tasks;
 using PlayFab;
 using PlayFab.ClientModels;
-using Ranking.Scripts;
-using Ranking.Scripts.DataBase;
+using Shinkan2025_Cooking.Ranking.Database;
 using UnityEngine;
 //using Point = Shinkan2025_Cooking.Scripts.Points.Point;
 

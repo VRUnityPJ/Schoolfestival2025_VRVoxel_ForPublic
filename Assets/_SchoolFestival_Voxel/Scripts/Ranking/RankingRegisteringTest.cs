@@ -1,17 +1,20 @@
-using Ranking.Scripts;
+using Shinkan2025_Cooking.Ranking.Scripts;
 using UnityEngine;
 
-public class RankingRegisteringTest : MonoBehaviour
+namespace _SchoolFestival_Voxel.Scripts.Ranking
 {
-    [SerializeField]
-    private RankingStorage _rankingStorage;
-
-    void Update()
+    public class RankingRegisteringTest : MonoBehaviour
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        [SerializeField]
+        private RankingStorage _rankingStorage;
+
+        void Update()
         {
-            _rankingStorage.Register();
-            Debug.Log("Registered");
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                _rankingStorage.Register();
+                Debug.Log("Registered");
+            }
         }
     }
 }

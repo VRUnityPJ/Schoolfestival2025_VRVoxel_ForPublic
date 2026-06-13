@@ -1,6 +1,6 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Ranking.Demo.Scripts.DemoGame;
+using Shinkan2024.Ranking.Demo.Scripts.DemoGame.Player;
 using UnityEngine;
 
 namespace _SchoolFestival_Voxel.Scripts.UI

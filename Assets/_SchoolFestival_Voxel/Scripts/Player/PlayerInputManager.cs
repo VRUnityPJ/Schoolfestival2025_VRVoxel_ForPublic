@@ -1,8 +1,9 @@
-using System;
+using _SchoolFestival_Voxel.Scripts.Player.Interfaces;
 using R3;
+using SchoolFestival_Voxel.Scripts.Player;
 using UnityEngine;
-using SchoolFestival_Voxel.Scripts.Player.Interfaces;
-namespace SchoolFestival_Voxel.Scripts.Player
+
+namespace _SchoolFestival_Voxel.Scripts.Player
 {
     public class PlayerInputManager : MonoBehaviour,IPlayerInputManager
     {

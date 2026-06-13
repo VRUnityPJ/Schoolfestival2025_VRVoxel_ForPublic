@@ -1,7 +1,8 @@
 ﻿using DG.Tweening;
 using NaughtyAttributes;
-using Ranking.Scripts;
-using Ranking.Scripts.Interface;
+using Replace;
+using Shinkan2025_Cooking.Ranking.Scripts;
+using Shinkan2025_Cooking.Ranking.Scripts.@interface;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -53,7 +54,7 @@ namespace Shinkan2024.Scripts.Game.UI
 
         private void ChangeText()
         {
-            var point = _storage.GetData<Point.Point>();
+            var point = _storage.GetData<Point>();
             int value = point.IntValue;
             _text.text = $"Result\n<color=\"red\"> {value.ToString()} </color>pt";
             // _text.text = $"Result\n<color=\"red\"> 10000 </color>pt";

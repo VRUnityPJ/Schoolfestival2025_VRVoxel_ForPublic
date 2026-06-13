@@ -1,21 +1,21 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Shinkan2024.Scripts.Game.Utility;
 using UnityEngine;
 
-public class DemoStart : MonoBehaviour
+namespace Shinkan2024.Scripts.Demo
 {
-    public AudioClip _startClip;
-    private void Update()
+    public class DemoStart : MonoBehaviour
     {
-        if (Camera.main.transform.position.z > transform.position.z)
+        public AudioClip _startClip;
+        private void Update()
         {
-            DemoTimer.StartMeasure();
-            Debug.Log("Start");
-            this.enabled = false;
-            AudioPlayer.PlayOneShotAudioAtPoint(_startClip,transform.position);
-            return;
+            if (Camera.main.transform.position.z > transform.position.z)
+            {
+                DemoTimer.StartMeasure();
+                Debug.Log("Start");
+                this.enabled = false;
+                AudioPlayer.PlayOneShotAudioAtPoint(_startClip,transform.position);
+                return;
+            }
         }
     }
 }

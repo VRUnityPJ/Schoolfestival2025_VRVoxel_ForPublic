@@ -3,7 +3,7 @@ using Shinkan2025_Cooking.Ranking.Scripts;
 using TMPro;
 using UnityEngine;
 
-namespace Ranking.Demo.Scripts.DemoGame
+namespace Shinkan2024.Ranking.Demo.Scripts.DemoGame
 {
     /// <summary>
     /// アラート処理を管理するクラス

@@ -1,26 +1,29 @@
 ﻿
 using UnityEngine;
 
-public static class MyMethod
+namespace KeyBoard
 {
-    /// <summary>
-    /// 親、その親...とComponentを探し最初に見つけたComponentを返す
-    /// </summary>
-    public static T GetComponentInParents<T>(Transform trans)
-    where T : MonoBehaviour
+    public static class MyMethod
     {
-        var parent = trans.parent;
-        while (parent != null)
+        /// <summary>
+        /// 親、その親...とComponentを探し最初に見つけたComponentを返す
+        /// </summary>
+        public static T GetComponentInParents<T>(Transform trans)
+            where T : MonoBehaviour
         {
-            T result = parent.GetComponent<T>();
-            if (result != null)
-                return result;
+            var parent = trans.parent;
+            while (parent != null)
+            {
+                T result = parent.GetComponent<T>();
+                if (result != null)
+                    return result;
 
-            parent = parent.transform.parent;
+                parent = parent.transform.parent;
+            }
+
+            Debug.LogError($"{nameof(T)}が見つかりません");
+            return null;
         }
-
-        Debug.LogError($"{nameof(T)}が見つかりません");
-        return null;
     }
 }
 

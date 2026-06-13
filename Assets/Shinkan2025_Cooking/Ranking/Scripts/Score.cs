@@ -1,6 +1,6 @@
-using Ranking.Scripts.Interface;
+using Shinkan2025_Cooking.Ranking.Scripts.@interface;
 
-namespace Ranking.Scripts
+namespace Shinkan2025_Cooking.Ranking.Scripts
 {
     public class Score : IRankingDataElement<Score>
     {

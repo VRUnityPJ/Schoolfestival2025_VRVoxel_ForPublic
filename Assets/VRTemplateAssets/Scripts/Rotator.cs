@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Unity.VRTemplate
+namespace VRTemplateAssets.Scripts
 {
     /// <summary>
     /// Rotates this object at a user defined speed

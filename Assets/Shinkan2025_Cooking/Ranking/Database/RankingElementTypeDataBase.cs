@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Ranking.Scripts.Interface;
-using UnityEditor;
+using Shinkan2025_Cooking.Ranking.Scripts.@interface;
 using UnityEngine;
-using Shinkan2025_Cooking.Ranking.Scripts;
 
-namespace Ranking.Scripts.DataBase
+namespace Shinkan2025_Cooking.Ranking.Database
 {
     /// <summary>
     /// ランキングに登録する要素の型データを格納するデータベース
@@ -25,6 +23,56 @@ namespace Ranking.Scripts.DataBase
             public string what_is_this;
         }
         /// <summary>
+        /// アセンブリ全体から指定されたクラス名の型（Type）を検索するフォールバックメソッド
+        /// </summary>
+        private Type FindType(string className)
+        {
+            if (string.IsNullOrEmpty(className)) return null;
+
+            // 1. 標準的な取得方法を試す
+            Type type = Type.GetType(className);
+            if (type != null) return type;
+
+            // 2. 「Shinkan2025_Cooking.」プレフィックスを補完して試す
+            if (!className.StartsWith("Shinkan2025_Cooking."))
+            {
+                type = Type.GetType("Shinkan2025_Cooking." + className);
+                if (type != null) return type;
+            }
+
+            // 3. 全てのロード済みアセンブリから検索する
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                type = assembly.GetType(className);
+                if (type != null) return type;
+
+                if (!className.StartsWith("Shinkan2025_Cooking."))
+                {
+                    type = assembly.GetType("Shinkan2025_Cooking." + className);
+                    if (type != null) return type;
+                }
+
+                // クラスのシンプルな名前（名前空間なし）で最終フォールバック検索
+                string simpleName = className;
+                int lastDot = className.LastIndexOf('.');
+                if (lastDot >= 0)
+                {
+                    simpleName = className.Substring(lastDot + 1);
+                }
+
+                foreach (var t in assembly.GetTypes())
+                {
+                    if (t.Name == simpleName)
+                    {
+                        return t;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// ランキングデータオブジェクトを作成
         /// </summary>
         public RankingData CreateRankingData()
@@ -33,16 +81,19 @@ namespace Ranking.Scripts.DataBase
             
             foreach (var data in typeData)
             {
-                //stringからTypeを取得
-                Type type = Type.GetType(data.className);
-                if(type == null)
-                    Debug.LogError("キャストできない型クラスです");
+                // ロバストな方法でTypeを取得する
+                Type type = FindType(data.className);
+                if (type == null)
+                {
+                    Debug.LogError($"キャストできない型クラスです: {data.className}");
+                    continue; // ヌルポによる起動クラッシュを防ぐためにスキップ
+                }
                 
-                //もっともらしい型にリフレクション
+                // もっともらしい型にリフレクション
                 object obj = Activator.CreateInstance(type);
                 
                 if (dictionary.ContainsKey(type))
-                    throw new Exception("指定する型が重複しています");
+                    throw new Exception($"指定する型が重複しています: {type}");
 
                 dictionary.Add(type, obj);
             }

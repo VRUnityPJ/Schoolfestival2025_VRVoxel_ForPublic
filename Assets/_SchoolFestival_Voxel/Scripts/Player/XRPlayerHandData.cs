@@ -1,9 +1,9 @@
-﻿using NaughtyAttributes;
-using SchoolFestival_Voxel.Scripts.Player.Interfaces;
+﻿using _SchoolFestival_Voxel.Scripts.Player.Interfaces;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
-namespace SchoolFestival_Voxel.Scripts.Player
+namespace _SchoolFestival_Voxel.Scripts.Player
 {
     public class XRPlayerHandData : MonoBehaviour, IPlayerHandData
     {

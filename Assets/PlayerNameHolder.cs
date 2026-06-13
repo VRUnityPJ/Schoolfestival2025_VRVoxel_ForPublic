@@ -1,37 +1,35 @@
-using Ranking.Scripts;
-using Ranking.Scripts.Interface;
+using KeyBoard;
 using R3;
+using Shinkan2025_Cooking.Ranking.Scripts;
+using Shinkan2025_Cooking.Ranking.Scripts.@interface;
 using UnityEngine;
 
-namespace KeyBoard
+public class PlayerNameHolder : MonoBehaviour,IRankingDataHolder<PlayerName>
 {
-    public class PlayerNameHolder : MonoBehaviour,IRankingDataHolder<PlayerName>
+    private PlayerName Name;
+    private InputKeyCollector _keyCollector;
+    private RankingStorage _storage;
+    void Start()
     {
-        private PlayerName Name;
-        private InputKeyCollector _keyCollector;
-        private RankingStorage _storage;
-        void Start()
-        {
-            SetStorage();
+        SetStorage();
             
-            if(!TryGetComponent(out _keyCollector))
-                Debug.LogError("InputKeyCollectorが取得できません");
+        if(!TryGetComponent(out _keyCollector))
+            Debug.LogError("InputKeyCollectorが取得できません");
             
-            _keyCollector.TypedText.Subscribe(value =>
-            {
-                Name = new PlayerName(value);
-                SendData(Name);
-            }).AddTo(this);
-        }
-        public void SetStorage()
+        _keyCollector.TypedText.Subscribe(value =>
         {
-            _storage = RankingStorage.instance;
-        }
+            Name = new PlayerName(value);
+            SendData(Name);
+        }).AddTo(this);
+    }
+    public void SetStorage()
+    {
+        _storage = RankingStorage.instance;
+    }
 
-        public void SendData(PlayerName name)
-        {
-            _storage.UpdateData(name);
-            Debug.Log(name.StringValue);
-        }
+    public void SendData(PlayerName name)
+    {
+        _storage.UpdateData(name);
+        Debug.Log(name.StringValue);
     }
 }

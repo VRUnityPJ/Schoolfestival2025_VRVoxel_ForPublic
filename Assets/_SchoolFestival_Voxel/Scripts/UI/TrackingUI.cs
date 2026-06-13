@@ -16,9 +16,7 @@ namespace _SchoolFestival_Voxel.Scripts.UI
 
         [SerializeField]
         private float _deltaYPosition = 0.2f;
-
-        [SerializeField, MinValue(0f),MaxValue(1f)]
-        private float _moveSpeed = 0.1f;
+        
 
         [SerializeField, MinValue(0f), MaxValue(1f)]
         private float _rotateSpeed = 0.1f;

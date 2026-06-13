@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Ranking.Demo.Scripts.DemoGame
+namespace Shinkan2024.Ranking.Demo.Scripts.DemoGame.Player
 {
     /// <summary>
     /// ランキングDemoシーンのプレイヤーを動かすクラス

@@ -1,4 +1,4 @@
-namespace Ranking.Demo.Scripts.DemoGame
+namespace Shinkan2024.Ranking.Demo.Scripts.DemoGame.Player
 {
     public interface IPlayer
     {

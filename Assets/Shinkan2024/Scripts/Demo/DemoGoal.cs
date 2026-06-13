@@ -1,8 +1,7 @@
-﻿using System;
-using Shinkan2024.Scripts.Game.Utility;
+﻿using Shinkan2024.Scripts.Game.Utility;
 using UnityEngine;
 
-namespace KeyBoard.Shinkan2024.Scripts.Demo
+namespace Shinkan2024.Scripts.Demo
 {
     public class DemoGoal: MonoBehaviour
     {

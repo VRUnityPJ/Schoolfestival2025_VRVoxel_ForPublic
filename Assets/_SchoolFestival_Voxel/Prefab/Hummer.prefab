@@ -62,7 +62,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.5, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3317871196404114462}
@@ -96,6 +96,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -117,9 +119,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!136 &973456367413709721
 CapsuleCollider:
@@ -153,8 +157,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3317871196404114462}
-  - component: {fileID: 3938182101010545798}
   - component: {fileID: 8543119785178890006}
+  - component: {fileID: 766741912724467393}
   m_Layer: 0
   m_Name: HitPoint
   m_TagString: Untagged
@@ -177,26 +181,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 578251687426838303}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3938182101010545798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2853041626388574230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64fda3b2aeeca26409945b6b94ccfa8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  swingThreshold: -0.8
-  swingSpeed: 4
-  _meshDestroyer: {fileID: 0}
-  _chunkManager: {fileID: 0}
-  _destroyRadius: 6
-  _playerP: {fileID: 0}
-  _crashAudio: {fileID: 8543119785178890006}
-  _crashAudioClip: {fileID: 8300000, guid: a3db0d587aeb07f4b9bcdb64b0f7db36, type: 3}
 --- !u!82 &8543119785178890006
 AudioSource:
   m_ObjectHideFlags: 0
@@ -294,6 +278,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &766741912724467393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2853041626388574230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c0b393ddcf98f7478a39f1bca7eb4b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_SchoolFestival_Voxel.Scripts.Voxel.Remake_0528.SwingDetector
+  _swingThreshold: -0.7
+  _swingSpeed: 4
+  _destroyRadius: 0.5
+  _playerTransform: {fileID: 0}
+  _crashAudio: {fileID: 8543119785178890006}
+  _crashAudioClip: {fileID: 8300000, guid: a3db0d587aeb07f4b9bcdb64b0f7db36, type: 3}
 --- !u!1 &6096195801282434931
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,7 +324,7 @@ Transform:
   m_GameObject: {fileID: 6096195801282434931}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: -1.4}
+  m_LocalPosition: {x: 0, y: -0, z: -0.807}
   m_LocalScale: {x: 0.1, y: 1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -356,6 +358,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -377,9 +381,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!136 &5490646755551080036
 CapsuleCollider:

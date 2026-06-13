@@ -13,13 +13,13 @@ namespace Shinkan2024.Scripts.Game.Utility
             switch (logType)
             {
                 case LogType.Log:
-                    Debug.Log(t);       
+                    UnityEngine.Debug.Log(t);       
                     break;
                 case LogType.Warning:
-                    Debug.LogWarning(t);
+                    UnityEngine.Debug.LogWarning(t);
                     break;
                 case LogType.Error:
-                    Debug.LogError(t);
+                    UnityEngine.Debug.LogError(t);
                     break;
                 case LogType.Assert:
                 case LogType.Exception:
@@ -31,7 +31,7 @@ namespace Shinkan2024.Scripts.Game.Utility
         [Conditional("UNITY_EDITOR")]
         public static void Assert(bool f, string t = "")
         {
-            Debug.Assert(f, t);
+            UnityEngine.Debug.Assert(f, t);
         }
     }
 }

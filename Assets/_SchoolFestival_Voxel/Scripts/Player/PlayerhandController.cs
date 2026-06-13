@@ -22,11 +22,5 @@ namespace _SchoolFestival_Voxel.Scripts.Player
             _leftHummer.SetActive(false);
             _rightHummer.SetActive(false);
         }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
     }
 }

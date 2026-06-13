@@ -1,8 +1,4 @@
-using Ranking.Scripts;
-using R3;
-using UnityEngine;
-
-namespace Ranking.Scripts.Interface
+namespace Shinkan2025_Cooking.Ranking.Scripts.@interface
 {
     /// <summary>
     /// ランキングに登録するデータを持つ役割を持つ

@@ -1,7 +1,8 @@
 ﻿using System;
 using R3;
+using Replace;
 using UnityEngine;
-using Shinkan2024.Scripts.Game.Point;
+
 
 namespace Shinkan2024.Scripts.Game.UI
 {
@@ -13,9 +14,9 @@ namespace Shinkan2024.Scripts.Game.UI
         private void Start()
         {
             if(!TryGetComponent(out _holder))
-                Debug.LogError("PointHolderが取得できません");
+                UnityEngine.Debug.LogError("PointHolderが取得できません");
             if(!TryGetComponent(out _viewer))
-                Debug.LogError("PointViewerが取得できません");
+                UnityEngine.Debug.LogError("PointViewerが取得できません");
 
             _holder.Point
                 .Subscribe(ConvertAndSendPoint)
@@ -24,7 +25,7 @@ namespace Shinkan2024.Scripts.Game.UI
         /// <summary>
         /// Pointをint型に返還しviewerに送る
         /// </summary>
-        private void ConvertAndSendPoint(Point.Point _point)
+        private void ConvertAndSendPoint(Point _point)
         {
             int value = _point.IntValue;
             

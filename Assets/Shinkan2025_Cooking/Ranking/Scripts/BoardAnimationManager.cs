@@ -1,6 +1,5 @@
 using DG.Tweening;
-using Ranking.Scripts;
-using Ranking.Scripts.DataBase;
+using Shinkan2025_Cooking.Ranking.Database;
 //using Shinkan2025_Cooking.Scripts.Points;
 using TMPro;
 using UnityEngine;

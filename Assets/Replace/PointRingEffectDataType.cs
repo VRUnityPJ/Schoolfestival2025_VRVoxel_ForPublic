@@ -1,4 +1,4 @@
-namespace Shinkan2024.Scripts.Game.Point
+namespace Replace
 {
     public enum PointRingEffectDataType
     {

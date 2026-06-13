@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SchoolFestival_Voxel.Scripts.Player
+namespace _SchoolFestival_Voxel.Scripts.Player
 {
     [AddComponentMenu("Shinkan2024/Player/PlayerGrappleGunHandler")]
     public class PlayerGrappleGunHandler : MonoBehaviour//, IPlayerGrappleGunHandler

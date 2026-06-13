@@ -1,12 +1,10 @@
 ﻿#region Using statements
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 #endregion
 
-namespace Bitgem.VFX.StylisedWater
+namespace Bitgem.StylisedWater.URP.Scripts.Bitgem.VFX.StylisedWater
 {
     public class WaterVolumeHelper : MonoBehaviour
     {

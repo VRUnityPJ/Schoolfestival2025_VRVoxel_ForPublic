@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
-using Ranking.Scripts;
-using Ranking.Scripts.DataBase;
+using Shinkan2025_Cooking.Ranking.Database;
 //using Shinkan2025_Cooking.Scripts.Points;
 using UnityEngine;
 

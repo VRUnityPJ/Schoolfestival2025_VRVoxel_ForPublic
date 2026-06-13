@@ -1,13 +1,11 @@
-using System;
-using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
 
-namespace Ranking.Demo.Scripts.DemoGame
+namespace Shinkan2024.Ranking.Demo.Scripts.DemoGame.UI
 {
     public class PlayerNameUIPresenter : MonoBehaviour
     {
-        [SerializeField] private PlayerNameHolder _model;
+        [SerializeField] private Player.PlayerNameHolder _model;
         [SerializeField] private PlayerNameUIViewer _viewer;
 
         private void Start()

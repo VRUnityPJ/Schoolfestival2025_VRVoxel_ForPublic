@@ -1,46 +1,49 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using R3;
-using UnityEngine.XR;
 using R3.Triggers;
+using Shinkan2025_Cooking.Scripts.Player.Interface;
+using UnityEngine;
+using UnityEngine.XR;
 
-public class PlayerVRController : MonoBehaviour, IPlayerInputController
+namespace Shinkan2025_Cooking.Scripts.Player
 {
-    [SerializeField]
-    private XRNode _xrNode;
-    private readonly ReactiveProperty<bool> _canStab;
-    private Vector3 _velocity;
-    private Vector3 _angularVelocity;
-
-    public ReadOnlyReactiveProperty<bool> CanStab => _canStab;
-    public Vector3 Velocity => _velocity;
-    public Vector3 AngularVelocity => _angularVelocity;
-
-    public void Start()
+    public class PlayerVRController : MonoBehaviour, IPlayerInputController
     {
-        SubscribeXRVelocitys();
-    }
+        [SerializeField]
+        private XRNode _xrNode;
+        private readonly ReactiveProperty<bool> _canStab;
+        private Vector3 _velocity;
+        private Vector3 _angularVelocity;
 
-    private void SubscribeXRVelocitys()
-    {
-        List<XRNodeState> states = new();
-        InputTracking.GetNodeStates(states);
+        public ReadOnlyReactiveProperty<bool> CanStab => _canStab;
+        public Vector3 Velocity => _velocity;
+        public Vector3 AngularVelocity => _angularVelocity;
 
-        this.FixedUpdateAsObservable()
-            .Subscribe(x =>
-            {
-                
-                foreach(XRNodeState xrNode in states)
+        public void Start()
+        {
+            SubscribeXRVelocitys();
+        }
+
+        private void SubscribeXRVelocitys()
+        {
+            List<XRNodeState> states = new();
+            InputTracking.GetNodeStates(states);
+
+            this.FixedUpdateAsObservable()
+                .Subscribe(x =>
                 {
-                    if (xrNode.nodeType != _xrNode) return;
+                
+                    foreach(XRNodeState xrNode in states)
+                    {
+                        if (xrNode.nodeType != _xrNode) return;
                  
-                    xrNode.TryGetVelocity(out _velocity);
-                    xrNode.TryGetAngularVelocity(out _angularVelocity);
+                        xrNode.TryGetVelocity(out _velocity);
+                        xrNode.TryGetAngularVelocity(out _angularVelocity);
 
-                    break;
-                }
+                        break;
+                    }
 
-            }).AddTo(this);
+                }).AddTo(this);
+        }
     }
 }

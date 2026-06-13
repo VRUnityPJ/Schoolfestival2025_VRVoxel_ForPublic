@@ -1,11 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using R3;
+using UnityEngine;
 
-public interface IPlayerInputController
+namespace Shinkan2025_Cooking.Scripts.Player.Interface
 {
-    public ReadOnlyReactiveProperty<bool> CanStab { get; }
-    public Vector3 Velocity { get; }
-    public Vector3 AngularVelocity { get; }
+    public interface IPlayerInputController
+    {
+        public ReadOnlyReactiveProperty<bool> CanStab { get; }
+        public Vector3 Velocity { get; }
+        public Vector3 AngularVelocity { get; }
+    }
 }

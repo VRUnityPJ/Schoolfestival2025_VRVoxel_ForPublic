@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Unity.VRTemplate
+namespace VRTemplateAssets.Scripts
 {
     /// <summary>
     /// Callout used to display information like world and controller tooltips.

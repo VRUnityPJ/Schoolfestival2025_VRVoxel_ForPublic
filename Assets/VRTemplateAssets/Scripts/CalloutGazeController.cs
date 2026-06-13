@@ -1,10 +1,7 @@
-using System;
-using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
-namespace Unity.VRTemplate
+namespace VRTemplateAssets.Scripts
 {
     /// <summary>
     /// Fires events when this object is is within the field of view of the gaze transform. This is currently used to

@@ -1,10 +1,9 @@
-﻿using System;
-using Ranking.Scripts;
-using Ranking.Scripts.DataBase;
+﻿using Shinkan2025_Cooking.Ranking.Database;
+using Shinkan2025_Cooking.Ranking.Scripts;
 using TMPro;
 using UnityEngine;
 
-namespace Ranking.Demo
+namespace Shinkan2024.Ranking.Demo.Scripts.DemoGame
 {
     /// <summary>
     /// RankingDemoシーン内で使うクラス

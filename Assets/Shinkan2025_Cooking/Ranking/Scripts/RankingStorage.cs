@@ -1,12 +1,11 @@
 ﻿using System;
-using Ranking.Scripts.Interface;
+using Shinkan2025_Cooking.Ranking.Database;
+using Shinkan2025_Cooking.Ranking.Scripts.@interface;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Ranking.Scripts.DataBase;
-using Shinkan2025_Cooking.Ranking.Scripts;
-using UnityEditor;
 
-namespace Ranking.Scripts
+namespace Shinkan2025_Cooking.Ranking.Scripts
 {
     /// <summary>
     /// ランキングのストレージ

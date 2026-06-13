@@ -1,5 +1,5 @@
 using System.Collections;
-using Ranking.Scripts.DataBase;
+using Shinkan2025_Cooking.Ranking.Database;
 using UnityEngine;
 
 namespace Shinkan2025_Cooking.Ranking.Scripts

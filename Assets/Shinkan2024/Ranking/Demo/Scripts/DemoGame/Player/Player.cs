@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Ranking.Demo.Scripts.DemoGame
+namespace Shinkan2024.Ranking.Demo.Scripts.DemoGame.Player
 {
     /// <summary>
     /// ランキングのDemoシーンのPlayer(球体)を管理するクラス

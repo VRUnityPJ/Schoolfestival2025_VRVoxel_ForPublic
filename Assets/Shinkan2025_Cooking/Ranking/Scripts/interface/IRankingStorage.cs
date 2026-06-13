@@ -1,6 +1,4 @@
-using Ranking.Scripts;
-
-namespace Ranking.Scripts.Interface
+namespace Shinkan2025_Cooking.Ranking.Scripts.@interface
 {
     public interface IRankingStorage
     {

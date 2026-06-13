@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Ranking.Demo.Scripts.DemoGame
+namespace Shinkan2024.Ranking.Demo.Scripts.DemoGame.UI
 {
     /// <summary>
     /// ランキングDemoシーンのプレイヤーにUIを追従させるクラス

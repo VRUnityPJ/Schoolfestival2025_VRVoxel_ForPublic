@@ -2,116 +2,121 @@ using System.Threading;
 using _SchoolFestival_Voxel.Scripts.Player;
 using _SchoolFestival_Voxel.Scripts.Timer;
 using _SchoolFestival_Voxel.Scripts.UI;
-using _SchoolFestival_Voxel.Scripts.Voxel.Remake;
+using _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528;
 using Cysharp.Threading.Tasks;
 using KeyBoard;
-using Ranking.Demo.Scripts.DemoGame;
 using UnityEngine;
 using UnityEngine.UI;
-using Ranking.Scripts;
 using SchoolFestival_Voxel.Scripts.Player;
-using SchoolFestival_Voxel.Scripts.Voxel.Remake;
-
+using Shinkan2024.Ranking.Demo.Scripts.DemoGame.Player;
+using Shinkan2025_Cooking.Ranking.Scripts;
 
 namespace _SchoolFestival_Voxel.Scripts.GameManager
 {
     /// <summary>
-    /// ゲームの進行を管理するクラス
+    /// ゲームの進行（シークエンス）を管理するクラス
     /// </summary>
     public class MainSequence : MonoBehaviour
     {
-        [SerializeField]
-        private Button _startButton;
-        [SerializeField] private TimeController _timeController;
-        [SerializeField] private PlayerTeleport _playerTeleport;
-        [SerializeField] private VoxelPhysicsController _voxelPhysicsController;
-        [SerializeField] private PlayerScoreHolder  _playerScoreHolder;
-        [SerializeField] private InputKeyCollector  _inputKeyCollector;
-        [SerializeField] private RankingStorage _rankingStorage;
-        [SerializeField] private LogInManager  _logInManager;
-        [SerializeField] private ChunkManager  _stageChunkManager;
-        [SerializeField] private RemakeMeshDestroyer _stageMeshDestroyer;
-        [SerializeField] private ChunkManager  _tutorialChunkManager;
-        [SerializeField] private RemakeMeshDestroyer _tutorialMeshDestroyer;
+        [Header("UI References")]
+        [SerializeField] private Button _startButton;
         [SerializeField] private TimePresenter _timePresenter;
         [SerializeField] private ScorePresenter _scorePresenter;
+
+        [Header("Game Controllers")]
+        [SerializeField] private TimeController _timeController;
+        [SerializeField] private PlayerTeleport _playerTeleport;
+        [SerializeField] private PlayerScoreHolder _playerScoreHolder;
+        [SerializeField] private InputKeyCollector _inputKeyCollector;
+        [SerializeField] private RankingStorage _rankingStorage;
+        [SerializeField] private LogInManager _logInManager;
+        [SerializeField] private TutorialClearChecker _tutorialClearChecker;
+
+        [Header("Player References")]
         [SerializeField] private PlayerMovement _playerMovement;
         [SerializeField] private PlayerhandController _playerhandController;
-        [SerializeField] private TutorialClearChecker _tutorialClearChecker;
-        [SerializeField] private SwingDetector _detectorLeft;
-        [SerializeField] private SwingDetector _detectorRight;
+
+        [Header("Voxel References")]
+        [SerializeField] private MagicaVoxelLoader _voxelLoader;
+        [SerializeField] private VoxelWorld _voxelWorld;
+
+        private void Awake()
+        {
+            if (_voxelWorld == null)
+            {
+                _voxelWorld = FindObjectOfType<VoxelWorld>();
+            }
+        }
 
         private async UniTaskVoid Start() => GameStartAsync().Forget();
 
         /// <summary>
-        /// メインゲームを進行する
+        /// メインゲームの進行ループ
         /// </summary>
         private async UniTask GameStartAsync()
         {
-            //ループ開始
+            // ゲーム全体のループ開始
             while (!destroyCancellationToken.IsCancellationRequested)
             {
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
+                
+                // ボクセルワールド全体をクリアし、初期地形モデルをロードし直して再構築
+                if (_voxelLoader != null)
+                {
+                    _voxelLoader.LoadAllModels();
+                }
+
+                // 初期地形ロード完了後、すべての VoxelLockItem をワールドに一括登録
+                if (_voxelWorld != null)
+                {
+                    VoxelLockItem.RegisterAllToWorld(_voxelWorld);
+                }
+                
+                // 1. 初期状態（キーボード入力・ロビー待機）のセットアップ
                 _playerhandController.OutGame();
                 _timePresenter.gameObject.SetActive(false);
                 _scorePresenter.gameObject.SetActive(false);
-                _voxelPhysicsController.OutVoxelMode();
                 _playerMovement.OutGame();
+                
+                // プレイヤーをキーボード（ログインエリア）へテレポートして開始ボタンを有効化
                 await _playerTeleport.TeleportToKeyboardAsync(cts.Token);
-
                 _startButton.gameObject.SetActive(true);
 
-                //ここでステージ生成終わるまで待つ(まだない)
-                //ゲームスタートボタン押すまで待つ
+                // スタートボタンが押されるのを待機
                 await _startButton.OnClickAsync(cts.Token);
-                //チュートリアルステージに移動
-                _voxelPhysicsController.InVoxelMode();
+                _startButton.gameObject.SetActive(false);
+
+                // 2. ゲーム本番開始
                 _playerMovement.InGame();
                 _playerhandController.InGame();
-                _detectorLeft._chunkManager =  _tutorialChunkManager;
-                _detectorRight._chunkManager =  _tutorialChunkManager;
-                _detectorLeft._meshDestroyer  = _tutorialMeshDestroyer;
-                _detectorRight._meshDestroyer  = _tutorialMeshDestroyer;
+                
+                // ステージの開始点（旧チュートリアルエリアのスタート地点）へテレポート
                 await _playerTeleport.TutorialTeleportAsync(cts.Token);
-                _voxelPhysicsController._chunkManager=_tutorialChunkManager;
-                
-                
                 await _tutorialClearChecker.OnStartTutorial(cts.Token);
-                _detectorLeft._chunkManager =  _stageChunkManager;
-                _detectorRight._chunkManager =  _stageChunkManager;
-                _detectorLeft._meshDestroyer  = _stageMeshDestroyer;
-                _detectorRight._meshDestroyer  = _stageMeshDestroyer;
-                
-                
-                //ゲームスタート
-                //プレイヤーの移動完了まで待つ
-                _voxelPhysicsController._chunkManager=_stageChunkManager;
-                await _playerTeleport.StageTeleportAsync(cts.Token);
                 _timePresenter.gameObject.SetActive(true);
                 
-              
-
-                //タイマースタート
+                // タイマースタート（カウントダウン演出を含む）
                 await _timeController.StartTimerAsync(cts.Token);
-                _scorePresenter.gameObject.SetActive(true);
                 
 
-                cts.Cancel();
+                // 3. ゲーム終了・リザルトフェーズ
+                cts.Cancel(); // 各種非同期処理のキャンセル
                 _rankingStorage.Register();
                 _playerMovement.OutGame();
                 _timePresenter.gameObject.SetActive(false);
-                
 
+                // スコア演出アニメーションの再生
+                _scorePresenter.gameObject.SetActive(true);
                 await _scorePresenter.ShowScoreAnimationAsync(destroyCancellationToken);
+                
+                // 4. ステージのリセット処理
                 _inputKeyCollector.ResetText();
                 _playerScoreHolder.ResetScore();
                 _logInManager.LogIn();
-                _stageChunkManager.ResetStage();
-                _tutorialChunkManager.ResetStage();
                 
-
+                // 埋められていたすべてのアイテムの物理状態・初期位置を一括リセット
+                VoxelLockItem.ResetAllItems();
             }
         }
-
     }
 }

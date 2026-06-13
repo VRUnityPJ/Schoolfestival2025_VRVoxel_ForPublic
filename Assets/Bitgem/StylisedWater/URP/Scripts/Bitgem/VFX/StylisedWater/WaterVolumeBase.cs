@@ -1,13 +1,12 @@
 ﻿#region Using statements
 
-using Bitgem.Core;
-using System.Collections;
 using System.Collections.Generic;
+using Bitgem.StylisedWater.URP.Scripts.Bitgem.Core;
 using UnityEngine;
 
 #endregion
 
-namespace Bitgem.VFX.StylisedWater
+namespace Bitgem.StylisedWater.URP.Scripts.Bitgem.VFX.StylisedWater
 {
     [ExecuteInEditMode]
     [RequireComponent(typeof(MeshFilter))]

@@ -1,25 +1,28 @@
-/// <summary>
-/// DebugModeかどうかのパラメータを保持するクラス
-/// </summary>
-public static class DebugMode
+namespace Shinkan2024.Scripts.Game.Debug
 {
-    private static bool isDebugMode = false;
     /// <summary>
-    /// DebugModeかどうか
-    /// 一度参照されるとfalseになる
+    /// DebugModeかどうかのパラメータを保持するクラス
     /// </summary>
-    public static bool IsDebugModeOneTime
+    public static class DebugMode
     {
-        get
+        private static bool isDebugMode = false;
+        /// <summary>
+        /// DebugModeかどうか
+        /// 一度参照されるとfalseになる
+        /// </summary>
+        public static bool IsDebugModeOneTime
         {
-            //結果を返したのちにfalseにする
-            var result = isDebugMode;
-            isDebugMode = false;
-            return result;
-        }
-        set
-        {
-            isDebugMode = value;
+            get
+            {
+                //結果を返したのちにfalseにする
+                var result = isDebugMode;
+                isDebugMode = false;
+                return result;
+            }
+            set
+            {
+                isDebugMode = value;
+            }
         }
     }
 }

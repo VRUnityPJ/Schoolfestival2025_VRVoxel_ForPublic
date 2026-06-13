@@ -2,12 +2,15 @@ using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneSwitch : MonoBehaviour
+namespace Shinkan2025_Cooking.Scripts.Scene
 {
-    [Scene, Required] public string _sceneName;
-
-    public void SwitchScene()
+    public class SceneSwitch : MonoBehaviour
     {
-        SceneManager.LoadScene(_sceneName);
+        [Scene, Required] public string _sceneName;
+
+        public void SwitchScene()
+        {
+            SceneManager.LoadScene(_sceneName);
+        }
     }
 }

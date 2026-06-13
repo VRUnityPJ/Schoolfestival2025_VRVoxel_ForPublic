@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace Ranking.Demo.Scripts.DemoGame
+namespace Shinkan2024.Ranking.Demo.Scripts.DemoGame.UI
 {
     public class ScoreUIViewer : MonoBehaviour
     {

@@ -1,10 +1,9 @@
-using System;
-using Ranking.Scripts;
-using Ranking.Scripts.Interface;
 using R3;
+using Shinkan2025_Cooking.Ranking.Scripts;
+using Shinkan2025_Cooking.Ranking.Scripts.@interface;
 using UnityEngine;
 
-namespace Ranking.Demo.Scripts.DemoGame
+namespace Shinkan2024.Ranking.Demo.Scripts.DemoGame.Player
 {
     //ランキングDemoシーンにおいてPlayerNameを保持するクラス
     public class PlayerNameHolder : MonoBehaviour,IRankingDataHolder<PlayerName>

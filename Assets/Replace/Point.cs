@@ -1,6 +1,6 @@
-﻿using Ranking.Scripts.Interface;
+﻿using Shinkan2025_Cooking.Ranking.Scripts.@interface;
 
-namespace Shinkan2024.Scripts.Game.Point
+namespace Replace
 {
     public class Point : IRankingDataElement<Point>
     {

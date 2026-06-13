@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Unity.VRTemplate
+namespace VRTemplateAssets.Scripts
 {
     /// <summary>
     /// Destroys GameObject after a few seconds.

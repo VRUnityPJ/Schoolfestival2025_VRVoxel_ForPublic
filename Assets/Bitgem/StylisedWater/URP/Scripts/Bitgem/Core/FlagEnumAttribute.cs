@@ -1,11 +1,10 @@
 ﻿#region Using statements
 
-using System;
 using UnityEngine;
 
 #endregion
 
-namespace Bitgem.Core
+namespace Bitgem.StylisedWater.URP.Scripts.Bitgem.Core
 {
     public class FlagEnumAttribute : PropertyAttribute
     {

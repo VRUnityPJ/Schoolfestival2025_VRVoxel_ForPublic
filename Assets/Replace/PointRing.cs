@@ -1,10 +1,9 @@
 using DG.Tweening;
-using Shinkan2024.Scripts.Game.Point;
-//using Shinkan2024.Scripts.Game.Utility;
 using UnityEngine;
 using UnityEngine.VFX;
+//using Shinkan2024.Scripts.Game.Utility;
 
-namespace Shinkan2024.Scripts.Game.PointRing
+namespace Replace
 {
     public class PointRing : MonoBehaviour
     {
@@ -74,7 +73,7 @@ namespace Shinkan2024.Scripts.Game.PointRing
             // ポイントを加算
             PointHolder.Instance?.UpPoint(_score);
             
-            if (TryGetComponent(out PointRingEffectData effectData))
+            if (TryGetComponent(out global::PointRingEffectData effectData))
             {
                 //var audioClip = effectData.GetAudioClip(PointRingEffectDataType.Captured);
                 //var vfx = effectData.GetVisualEffect(PointRingEffectDataType.Captured);

@@ -1,5 +1,6 @@
 ﻿#region Using statements
 
+using Bitgem.StylisedWater.URP.Scripts.Bitgem.Core;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace Bitgem.Editor
 {
-    [CustomPropertyDrawer(typeof(Core.FlagEnumAttribute))]
+    [CustomPropertyDrawer(typeof(FlagEnumAttribute))]
     public class EnumFlagsAttributeDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect _position, SerializedProperty _property, GUIContent _label)

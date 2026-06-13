@@ -6,8 +6,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 // using Shinkan2024.Scripts.Game.Stage;
 using NaughtyAttributes;
-using Ranking.Scripts;
-using Ranking.Scripts.Interface;
+using Replace;
+using Shinkan2024.Scripts.Game.Debug;
+using Shinkan2025_Cooking.Ranking.Scripts;
+using Shinkan2025_Cooking.Ranking.Scripts.@interface;
 // using UniRx;
 using TMPro;
 namespace Shinkan2024.Scripts.Game.UI
@@ -47,7 +49,7 @@ namespace Shinkan2024.Scripts.Game.UI
 
         private async UniTask DisplayScreen()
         {
-            var point = _storage.GetData<Point.Point>();
+            var point = _storage.GetData<Point>();
             var name = _storage.GetData<PlayerName>();
             
             _scoreText.text = "SCORE : " + point.IntValue.ToString();
@@ -75,7 +77,7 @@ namespace Shinkan2024.Scripts.Game.UI
         {
             _storage = RankingStorage.instance;
             if(!_storage)
-                Debug.LogError("rankingストレージが取得できていません");
+                UnityEngine.Debug.Log("rankingストレージが取得できていません");
         }
 
         private void Register()

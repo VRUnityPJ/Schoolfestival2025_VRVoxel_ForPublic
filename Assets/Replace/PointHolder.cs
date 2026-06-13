@@ -1,11 +1,11 @@
-using Ranking.Scripts;
-using Ranking.Scripts.Interface;
-//using UniRx;
 using R3;
+using Shinkan2025_Cooking.Ranking.Scripts;
+using Shinkan2025_Cooking.Ranking.Scripts.@interface;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+//using UniRx;
 
-namespace Shinkan2024.Scripts.Game.Point
+namespace Replace
 {
     /// <summary>
     /// Pointを保持するクラス

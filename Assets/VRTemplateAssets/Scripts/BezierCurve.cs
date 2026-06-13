@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-namespace Unity.VRTemplate
+namespace VRTemplateAssets.Scripts
 {
     /// <summary>
     /// Draws a bezier curve from a starting point transform to an end point transform

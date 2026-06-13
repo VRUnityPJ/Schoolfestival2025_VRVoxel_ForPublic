@@ -1,7 +1,4 @@
-﻿using System;
-using R3;
-
-namespace Ranking.Scripts.Interface
+﻿namespace Shinkan2025_Cooking.Ranking.Scripts.@interface
 {
     /// <summary>
     /// ランキングに登録する要素クラスが継承するインターフェース
