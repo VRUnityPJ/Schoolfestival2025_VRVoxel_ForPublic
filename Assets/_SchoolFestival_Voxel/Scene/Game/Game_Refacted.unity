@@ -25087,7 +25087,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _limitTimeSec:
-    value: 30
+    value: 150
 --- !u!4 &1629729915
 Transform:
   m_ObjectHideFlags: 0
