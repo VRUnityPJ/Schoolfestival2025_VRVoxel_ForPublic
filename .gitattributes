@@ -1,1 +1,1 @@
-*.asset filter=lfs diff=lfs merge=lfs -text
+Assets/_SchoolFestival_Voxel/texture/*Array.asset filter=lfs diff=lfs merge=lfs -text
