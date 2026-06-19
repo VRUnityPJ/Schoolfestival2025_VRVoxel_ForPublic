@@ -1,6 +1,6 @@
 using _SchoolFestival_Voxel.Scripts.Player;
 using _SchoolFestival_Voxel.Scripts.Player.Interfaces;
-using _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528;
+using _SchoolFestival_Voxel.Scripts.Voxel;
 using NaughtyAttributes;
 using UnityEngine;
 using VContainer;
@@ -16,6 +16,9 @@ namespace _SchoolFestival_Voxel.Scripts.LifeTimeScope
         [SerializeField] private VoxelMaterialDatabase _materialDatabase;
         [SerializeField] private VoxelWorldRenderer _voxelWorldRenderer; 
         [SerializeField] private VoxelDestoyer _voxelDestoyer;
+        [SerializeField] private VoxelPainter _voxelPainter;
+        [SerializeField] private VoxelBuilder _voxelBuilder;
+        [SerializeField] private VoxelObjectSpawner _voxelObjectSpawner;
         
             
         protected override void Configure(IContainerBuilder builder)
@@ -39,6 +42,18 @@ namespace _SchoolFestival_Voxel.Scripts.LifeTimeScope
             if (_voxelDestoyer == null)
             {
                 _voxelDestoyer = FindObjectOfType<VoxelDestoyer>();
+            }
+            if (_voxelPainter == null)
+            {
+                _voxelPainter = FindObjectOfType<VoxelPainter>();
+            }
+            if (_voxelBuilder == null)
+            {
+                _voxelBuilder = FindObjectOfType<VoxelBuilder>();
+            }
+            if (_voxelObjectSpawner == null)
+            {
+                _voxelObjectSpawner = FindObjectOfType<VoxelObjectSpawner>();
             }
 
             // Register Component
@@ -79,6 +94,33 @@ namespace _SchoolFestival_Voxel.Scripts.LifeTimeScope
             else
             {
                 Debug.LogWarning("[XRPlayerLifetimeScope] VoxelDestoyer is null and could not be resolved.");
+            }
+
+            if (_voxelPainter != null)
+            {
+                builder.RegisterComponent(_voxelPainter);
+            }
+            else
+            {
+                Debug.LogWarning("[XRPlayerLifetimeScope] VoxelPainter is null and could not be resolved.");
+            }
+
+            if (_voxelBuilder != null)
+            {
+                builder.RegisterComponent(_voxelBuilder);
+            }
+            else
+            {
+                Debug.LogWarning("[XRPlayerLifetimeScope] VoxelBuilder is null and could not be resolved.");
+            }
+
+            if (_voxelObjectSpawner != null)
+            {
+                builder.RegisterComponent(_voxelObjectSpawner);
+            }
+            else
+            {
+                Debug.LogWarning("[XRPlayerLifetimeScope] VoxelObjectSpawner is null and could not be resolved.");
             }
         }
     }

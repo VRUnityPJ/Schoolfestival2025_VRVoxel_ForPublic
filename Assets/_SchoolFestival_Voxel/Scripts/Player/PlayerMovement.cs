@@ -1,5 +1,5 @@
 using _SchoolFestival_Voxel.Scripts.Player.Interfaces;
-using _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528;
+using _SchoolFestival_Voxel.Scripts.Voxel;
 using R3;
 using SchoolFestival_Voxel.Scripts.Player;
 using UnityEngine;
@@ -87,9 +87,6 @@ namespace _SchoolFestival_Voxel.Scripts.Player
             _playerInputManager.OnMove
                 .Subscribe(input => Move(input))
                 .AddTo(this);
-            _isGround
-                .Subscribe(OnChangeIsGround)
-                .AddTo(this);
             _playerInputManager.OnFloatLeft
                 .Subscribe(_ => _isFloatingLeft = true)
                 .AddTo(this);
@@ -102,12 +99,6 @@ namespace _SchoolFestival_Voxel.Scripts.Player
             _playerInputManager.OnFloatCanceledRight
                 .Subscribe(_ => _isFloatingRight = false)
                 .AddTo(this);
-            /*
-            GameJudge.instance?
-                .OnGameOver
-                .Subscribe(_ => _isMovable = false)
-                .AddTo(this);
-                */
         }
 
         private void OnDestroy()
@@ -132,7 +123,6 @@ namespace _SchoolFestival_Voxel.Scripts.Player
             if (Time.time - _lastMoveLogTime > 0.5f)
             {
                 _lastMoveLogTime = Time.time;
-                Debug.Log($"[PlayerMovement] Move() input={inputValue}, isMovable={_isMovable}, isGround={_isGround.Value}, maxAccel={_maxAcceleration}, airMult={_airControlMultiplier}, curVel={_rigidbody.linearVelocity}");
             }
 
             if (!_isMovable) return;
@@ -289,11 +279,7 @@ namespace _SchoolFestival_Voxel.Scripts.Player
             if (_isFloatingLeft|| _isFloatingRight)
                 _rigidbody.AddForce(Vector3.up * _floatPower, ForceMode.Force);
         }
-
-        private void OnChangeIsGround(bool isGround)
-        {
-            // _rigidbody.linearDamping = isGround ? _groundDrag : _airDrag;
-        }
+        
 
         private bool CheckIsGround()
         {

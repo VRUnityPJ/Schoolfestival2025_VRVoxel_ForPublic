@@ -3,7 +3,7 @@ using NaughtyAttributes;
 using UnityEngine;
 using VContainer;
 
-namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
+namespace _SchoolFestival_Voxel.Scripts.Voxel
 {
     [RequireComponent(typeof(Rigidbody))]
     public class VoxelLockItem : MonoBehaviour
@@ -203,12 +203,6 @@ namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
             if (_isUnearthed && other.gameObject.TryGetComponent(out Shinkan2024.Ranking.Demo.Scripts.DemoGame.Player.Player player))
             {
                 player.AddScore(100);
-                
-                // // プレイヤーに獲得されたため、物理ターゲットリストから登録解除する
-                // if (_voxelWorld != null)
-                // {
-                //     _voxelWorld.UnregisterPhysicsTarget(transform);
-                // }
 
                 gameObject.SetActive(false);
             }
@@ -220,12 +214,6 @@ namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
             {
                 player.AddScore(100);
                 
-                // // プレイヤーに獲得されたため、物理ターゲットリストから登録解除する
-                // if (_voxelWorld != null)
-                // {
-                //     _voxelWorld.UnregisterPhysicsTarget(transform);
-                // }
-
                 gameObject.SetActive(false);
             }
         }

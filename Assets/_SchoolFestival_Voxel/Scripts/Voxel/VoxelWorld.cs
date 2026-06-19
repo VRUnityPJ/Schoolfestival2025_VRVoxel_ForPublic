@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 
-namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
+namespace _SchoolFestival_Voxel.Scripts.Voxel
 {
     public class VoxelWorld: MonoBehaviour
     {
@@ -508,8 +508,6 @@ namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
         }
         public VoxelData GetVoxelDirect(int index)
         {
-            // すでにループの範囲内(0~4095)であることが保証されているため、
-            // 境界チェックを省いて最速で配列データを返します
             return _voxels[index];
         }
         

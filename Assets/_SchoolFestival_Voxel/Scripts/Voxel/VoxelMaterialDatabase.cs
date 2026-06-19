@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
+namespace _SchoolFestival_Voxel.Scripts.Voxel
 {
     [CreateAssetMenu(fileName = "VoxelMaterialDatabase", menuName = "Voxel/Material Database")]
     public class VoxelMaterialDatabase : ScriptableObject

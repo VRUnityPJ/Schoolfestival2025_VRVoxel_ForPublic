@@ -3,7 +3,7 @@ using _SchoolFestival_Voxel.Scripts.Player.Interfaces;
 using UnityEngine;
 using VContainer;
 
-namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
+namespace _SchoolFestival_Voxel.Scripts.Voxel
 {
     public struct VoxelContactPoint
     {

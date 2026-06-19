@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
 using VContainer;
 
-namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
+namespace _SchoolFestival_Voxel.Scripts.Voxel
 {
     public class VoxelDestoyer : MonoBehaviour
     {
@@ -66,6 +67,65 @@ namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
             }
 
             // 4. 汚れたチャンクを一括で再ビルド
+            _worldRenderer.RebuildDirtyChunks();
+        }
+
+        /// <summary>
+        /// 始点から終点に向けて、指定の半径で直線状にVoxelを破壊する（円柱状のくり抜き）
+        /// </summary>
+        public void DestroyLine(Vector3 start, Vector3 end, float radius)
+        {
+            float voxelSize = _voxelWorld.VoxelSize;
+            float distance = Vector3.Distance(start, end);
+            Vector3 direction = (end - start).normalized;
+            
+            // ボクセルサイズに対応するステップ幅でサンプリング
+            float stepSize = voxelSize * 0.4f;
+            int steps = Mathf.Max(1, Mathf.CeilToInt(distance / stepSize));
+            
+            HashSet<Vector3Int> processedCoords = new HashSet<Vector3Int>();
+            Vector3 worldOrigin = _voxelWorld.transform.position;
+            float gridRadius = radius / voxelSize;
+
+            for (int i = 0; i <= steps; i++)
+            {
+                Vector3 samplePoint = start + direction * (i * stepSize);
+                Vector3 localPos = samplePoint - worldOrigin;
+                Vector3 gridCenter = localPos / voxelSize;
+
+                int minX = Mathf.FloorToInt(gridCenter.x - gridRadius);
+                int maxX = Mathf.CeilToInt(gridCenter.x + gridRadius);
+                int minY = Mathf.FloorToInt(gridCenter.y - gridRadius);
+                int maxY = Mathf.CeilToInt(gridCenter.y + gridRadius);
+                int minZ = Mathf.FloorToInt(gridCenter.z - gridRadius);
+                int maxZ = Mathf.CeilToInt(gridCenter.z + gridRadius);
+
+                for (int x = minX; x <= maxX; x++)
+                {
+                    for (int y = minY; y <= maxY; y++)
+                    {
+                        for (int z = minZ; z <= maxZ; z++)
+                        {
+                            Vector3Int gridPos = new Vector3Int(x, y, z);
+                            if (processedCoords.Contains(gridPos)) continue;
+
+                            float dx = x - gridCenter.x;
+                            float dy = y - gridCenter.y;
+                            float dz = z - gridCenter.z;
+
+                            if (dx * dx + dy * dy + dz * dz <= gridRadius * gridRadius)
+                            {
+                                VoxelData currentData = _voxelWorld.GetVoxel(gridPos);
+                                if (currentData.density <= 0) continue;
+
+                                _voxelWorld.SetVoxel(gridPos, new VoxelData(ClearValue, currentData.materialID));
+                                processedCoords.Add(gridPos);
+                            }
+                        }
+                    }
+                }
+            }
+
             _worldRenderer.RebuildDirtyChunks();
         }
     }

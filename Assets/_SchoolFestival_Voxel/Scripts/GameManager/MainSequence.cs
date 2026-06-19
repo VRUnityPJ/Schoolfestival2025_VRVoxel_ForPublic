@@ -2,7 +2,7 @@ using System.Threading;
 using _SchoolFestival_Voxel.Scripts.Player;
 using _SchoolFestival_Voxel.Scripts.Timer;
 using _SchoolFestival_Voxel.Scripts.UI;
-using _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528;
+using _SchoolFestival_Voxel.Scripts.Voxel;
 using Cysharp.Threading.Tasks;
 using KeyBoard;
 using UnityEngine;

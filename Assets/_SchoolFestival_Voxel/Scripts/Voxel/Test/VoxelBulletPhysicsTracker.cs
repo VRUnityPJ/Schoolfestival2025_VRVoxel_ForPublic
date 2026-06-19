@@ -11,12 +11,12 @@ namespace _SchoolFestival_Voxel.Scripts.Voxel.Test
         [Header("Settings")]
         [SerializeField] private float _physicsActivationRadius = 16f; // 弾丸の有効判定範囲（通常16m=1チャンク分で十分）
 
-        private Remake_0528.VoxelWorld _voxelWorld;
+        private VoxelWorld _voxelWorld;
 
         private void Start()
         {
             // VoxelWorldを検索
-            _voxelWorld = FindObjectOfType<Remake_0528.VoxelWorld>();
+            _voxelWorld = FindObjectOfType<VoxelWorld>();
             
             if (_voxelWorld != null)
             {

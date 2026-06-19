@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
+namespace _SchoolFestival_Voxel.Scripts.Voxel
 {
     public static class ChunkUtility
     {
