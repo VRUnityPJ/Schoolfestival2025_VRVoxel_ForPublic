@@ -2,7 +2,7 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity; // Instantiateの拡張メソッドを使用するために必須
 
-namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
+namespace _SchoolFestival_Voxel.Scripts.Voxel
 {
     public class VoxelObjectSpawner : MonoBehaviour
     {
@@ -19,7 +19,7 @@ namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
 
             // Object.Instantiate(prefab) の代わりに、resolver.Instantiate を使用する！
             // これにより、インスタンス化された瞬間に、プレハブ内の VoxelPhysicsController 等に
-            // VoxelWorld や VoxelMaterialDatabase などが自動で [Inject] されます。
+            // VoxelWorld や VoxelMaterialDatabase などが自動で [Inject] される
             return _resolver.Instantiate(prefab, position, rotation);
         }
     }

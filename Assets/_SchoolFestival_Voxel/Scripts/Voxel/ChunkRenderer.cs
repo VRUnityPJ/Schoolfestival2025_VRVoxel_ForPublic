@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using ZLinq;
 
-namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
+namespace _SchoolFestival_Voxel.Scripts.Voxel
 {
     public class ChunkRenderer : MonoBehaviour
     {
@@ -118,36 +117,13 @@ namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
                     }
                 }
             }
-            /*
-            // -----------------------------------------------------------------
-            // プレスキャン: このチャンク内で使用されているマテリアルID（最大4つ）を収集
-            // -----------------------------------------------------------------
-            HashSet<int> uniqueMaterials = new HashSet<int>();
-            for (int x = 0; x < resolution + 1; x++)
-            {
-                for (int y = 0; y < resolution + 1; y++)
-                {
-                    for (int z = 0; z < resolution + 1; z++)
-                    {
-                        Vector3Int localPos = new Vector3Int(x, y, z);
-                        Vector3Int globalPos = chunkStartPos + localPos;
-                        int materialID = world.GetCellMaterialID(globalPos, isoLevel);
-                        if (materialID != -1)
-                        {
-                            uniqueMaterials.Add(materialID);
-                        }
-                    }
-                }
-            }*/
             List<int> chunkMaterials = new List<int>(uniqueMaterials);
             while (chunkMaterials.Count < 4)
             {
                 chunkMaterials.Add(0); // 4スロットになるようにダミー（0）でパディング
             }
-
-            // =================================================================
+            
             // パス 1: 頂点の生成（セル中心に滑らかな頂点を配置）
-            // =================================================================
             for (int x = 0; x < resolution + 1; x++)
             {
                 for (int y = 0; y < resolution + 1; y++)
@@ -247,67 +223,6 @@ namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
                             // 頂点カラーにウェイトを格納
                             Color vertexColor = new Color(w0, w1, w2, w3);
                             _colors.Add(vertexColor);
-                            /*
-                            var materialWeights = new Dictionary<int, float>();
-                            float totalWeight = 0f;
-
-                            for (int i = 0; i < 8; i++)
-                            {
-                                Vector3Int cornerPos = globalPos + ChunkUtility.CornerOffsets[i];
-                                VoxelData cornerData = world.GetVoxel(cornerPos);
-
-                                // 密度が閾値以上（ソリッド）で、有効なマテリアルIDの場合
-                                if (cornerData.density >= isoLevel && cornerData.materialID != -1)
-                                {
-                                    // コーナーのローカル座標
-                                    Vector3 cornerLocalPos = localPos + (Vector3)ChunkUtility.CornerOffsets[i];
-                                    float dist = Vector3.Distance(vertexPosition - (Vector3)chunkStartPos, cornerLocalPos);
-
-                                    // 距離の逆数を影響度とする
-                                    float w = 1.0f / Mathf.Max(dist, 0.01f);
-                                    if (materialWeights.TryGetValue(cornerData.materialID, out float currentWeight))
-                                    {
-                                        materialWeights[cornerData.materialID] = currentWeight + w;
-                                    }
-                                    else
-                                    {
-                                        materialWeights[cornerData.materialID] = w;
-                                    }
-                                    totalWeight += w;
-                                }
-                            }
-
-                            // 収集したウェイトを、チャンクの共通4スロットに対応させてColor(R,G,B,A)に格納
-                            float w0 = 0f, w1 = 0f, w2 = 0f, w3 = 0f;
-                            if (totalWeight > 0f)
-                            {
-                                materialWeights.TryGetValue(chunkMaterials[0], out w0);
-                                materialWeights.TryGetValue(chunkMaterials[1], out w1);
-                                materialWeights.TryGetValue(chunkMaterials[2], out w2);
-                                materialWeights.TryGetValue(chunkMaterials[3], out w3);
-
-                                // 正規化
-                                float sum = w0 + w1 + w2 + w3;
-                                if (sum > 0f)
-                                {
-                                    w0 /= sum;
-                                    w1 /= sum;
-                                    w2 /= sum;
-                                    w3 /= sum;
-                                }
-                                else
-                                {
-                                    w0 = 1.0f;
-                                }
-                            }
-                            else
-                            {
-                                w0 = 1.0f;
-                            }
-
-                            // 頂点カラーにウェイトを格納 (R=マテリアル0の重み, G=1, B=2, A=3)
-                            Color vertexColor = new Color(w0, w1, w2, w3);
-                            _colors.Add(vertexColor);*/
                         }
                     }
                 }
@@ -411,8 +326,17 @@ namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
                 meshCollider = gameObject.AddComponent<MeshCollider>();
             }
 
-            // 三角形の面データが存在するかチェック
-            bool hasTriangles = _submeshTriangles.TryGetValue(0, out var triangles) && triangles != null && triangles.Count >= 3;
+            // すべてのサブメッシュ（マテリアルID）の三角形データを1つのリストに統合する
+            List<int> allTriangles = new List<int>();
+            foreach (var kvp in _submeshTriangles)
+            {
+                if (kvp.Value != null)
+                {
+                    allTriangles.AddRange(kvp.Value);
+                }
+            }
+
+            bool hasTriangles = allTriangles.Count >= 3;
 
             if (_vertices.Count < 3 || !hasTriangles)
             {
@@ -442,7 +366,7 @@ namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
 
             // 単一サブメッシュとして構築
             mesh.subMeshCount = 1;
-            mesh.SetTriangles(triangles.ToArray(), 0);
+            mesh.SetTriangles(allTriangles.ToArray(), 0);
             
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();

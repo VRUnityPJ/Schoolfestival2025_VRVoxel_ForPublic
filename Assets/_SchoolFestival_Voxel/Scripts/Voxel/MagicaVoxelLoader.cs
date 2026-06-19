@@ -1,13 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using NaughtyAttributes;
 using UnityEngine;
 using VContainer;
 using VoxReader.Interfaces;
-using ZLinq;
 
-namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
+namespace _SchoolFestival_Voxel.Scripts.Voxel
 {
     public class MagicaVoxelLoader : MonoBehaviour
     {

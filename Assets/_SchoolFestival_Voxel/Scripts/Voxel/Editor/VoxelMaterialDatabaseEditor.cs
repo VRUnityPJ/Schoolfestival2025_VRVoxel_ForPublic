@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using System.IO;
 
-namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528.Editor
+namespace _SchoolFestival_Voxel.Scripts.Voxel.Editor
 {
     [CustomEditor(typeof(VoxelMaterialDatabase))]
     public class VoxelMaterialDatabaseEditor : UnityEditor.Editor

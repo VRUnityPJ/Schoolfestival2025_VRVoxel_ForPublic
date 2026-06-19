@@ -31,8 +31,7 @@ namespace _SchoolFestival_Voxel.Scripts.GameManager
         {
             _enterTrigger = _tutorialCollider.GetAsyncTriggerEnterTrigger();
             _countdownText.gameObject.SetActive(false);
-            // _tutorialCollider.gameObject.transform.localScale = Vector3.zero;
-            // _instructText.rectTransform.localScale = Vector3.zero;
+            
         }
 
         /// <summary>

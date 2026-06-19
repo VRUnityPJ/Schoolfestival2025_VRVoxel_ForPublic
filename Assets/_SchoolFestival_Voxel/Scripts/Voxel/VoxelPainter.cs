@@ -2,7 +2,7 @@ using NaughtyAttributes;
 using UnityEngine;
 using VContainer;
 
-namespace _SchoolFestival_Voxel.Scripts.Voxel.Remake_0528
+namespace _SchoolFestival_Voxel.Scripts.Voxel
 {
     public class VoxelPainter : MonoBehaviour
     {
